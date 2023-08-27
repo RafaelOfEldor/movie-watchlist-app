@@ -1,7 +1,13 @@
 import React from "react"
 import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink } from "react-router-dom"
+import Footer from "/components/Footer"
+import Browse from "./Browse"
+import nextPageIcon from "/dist/assets/next-page.svg"
+import previousPageIcon from "/dist/assets/previous-page.svg"
 
 export default function HomePage() {
+
+  
 
       
 
@@ -34,7 +40,7 @@ export default function HomePage() {
  }
 
   
-  const { movies,  searchText } = useOutletContext()
+  const { movies,  searchText, page, setPage } = useOutletContext()
   const moviesResults = movies.results
   console.log(moviesResults)
   let moviesElement = "Loading..."
@@ -43,6 +49,18 @@ export default function HomePage() {
   let trendingMovieElement = "Loading..."
   let comedyMovieElement = "Loading..."
   let category = ""
+
+  function nextPage() {
+    setPage(prev => prev + 1)
+    window.scrollTo({top: "0", transition: "ease-in-out 1s"})
+  }
+
+  function prevPage() {
+    if (page > 1) {
+      setPage(prev => prev -1)
+      window.scrollTo({top: "0", transition: "ease-in-out 1s"})
+    }
+  }
   
   if (moviesResults) {
     let movieCount = 0
@@ -518,12 +536,22 @@ if (moviesResults) {
   //<h1 style={{color: "white", marginLeft: "350px"}}>Popular movies</h1>
   return (
     searchText !== "" ?
-    <div className="movie-elements-search-div">
-        <h1 style={{marginLeft: "280px", color: "white"}}>Results for: {searchText}</h1>
-      <div className="movie-elements-search-elements">
-        {moviesElement}
+    
+      <div className="movie-elements-search-div">
+          <h1 style={{marginLeft: "280px", color: "white"}}>Results for: {searchText}</h1>
+        <div className="movie-elements-search-elements">
+          {moviesElement}
+        </div>
+
+        <div className="page-buttons-div">
+          <img src={`${previousPageIcon}`} onClick={prevPage} />
+          <h3>{page}</h3>
+          <img src={`${nextPageIcon}`} onClick={nextPage}/>
+        </div>
+
+        <Footer/>
       </div>
-    </div>
+    
     
     :
     <div className="home-page-div" style={{backgroundImage: "url(/icons\blue-wavy-background.jpg)"}}>
@@ -575,6 +603,7 @@ if (moviesResults) {
       <div className="movie-elements-div action">
         {moviesResults ? comedyMovieElement : "loading..."}
       </div>
+      <Footer />
     </div>
     
   )

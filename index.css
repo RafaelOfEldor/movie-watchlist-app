@@ -355,19 +355,53 @@ body {
     border-radius: 10px;
     height: 50vh;
     width: 15vw;
-    transition: ease-in-out 0.5s;
+    transition: ease-in-out 0.2s;
     cursor: pointer;
+}
+
+.page-buttons-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin-left: 50%;
+    margin-top: 100px;;
+    height: 100px;
+    width: 300px;
+    color: blue;
+    font-size: 3rem;
+    
+}
+
+.page-buttons-div > img {
+    height: 90px;
+    cursor: pointer;
+    filter: invert(60%) sepia(19%) saturate(5586%) hue-rotate(157deg) brightness(100%) contrast(108%);
+    transition: ease-in-out 0.2s;
+}
+.page-buttons-div > img:hover {
+    background-color: blue;
+    border-radius: 100px;
+    filter: none
 }
 
 .movie-element-div:hover {
     opacity: 0.8;
     color:#ff0000;
     font-weight: 700;
+    transform: scale(1.1);
+    margin: 0;
 }
 
-
-
-
+.footer-div {
+    margin-top: 50px;
+    background-color: rgba(110, 17, 17, 0.151);
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    align-items: center;
+}
 .movie-element-active-div {
     background-size: cover;
     background-color: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(0, 0, 0, 0.73));
