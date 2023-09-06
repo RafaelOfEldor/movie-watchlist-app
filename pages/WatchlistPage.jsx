@@ -4,16 +4,83 @@ import { BrowserRouter, Routes, Route, Link, useOutletContext } from "react-rout
 import nextPageIcon from "/dist/assets/next-page.svg"
 import previousPageIcon from "/dist/assets/previous-page.svg"
 import Footer from "/components/Footer"
-import { AddToWatchList } from "../components/AddToWatchlist"
 import { auth } from "../firebase"
+import {db} from "../firebase"
+import {getDocs, collection} from "firebase/firestore"
 
 
 
 export default function Browse( { children }) {
 
-  const { movies,  searchText, page, setPage } = useOutletContext()
+  const [watchlistMovie, setWatchlistMovie] = React.useState([])
+  const [watchlistMovieElement, setWatchlistMovieElement] = React.useState([])
+  const { movies, searchText, page, setPage, currentUser, setCurrentUser  } = useOutletContext()
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDc4ODJlZjZkNWQzZTU2NDhmZmEyNGY5YTEzM2U5YSIsInN1YiI6IjY0ZTc2YWJjNTk0Yzk0MDExYzM1ZjVkNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RDrTbC6bUeqcV0uB3d9_8Q1Tp9HPsMYn85BzGfSRhv4'
+    }
+  };
+
+  React.useEffect(() => {
+    setWatchlistMovieElement([])
+    const moviesCollectionRef = collection(db, "Watchlist-Movies")
+  
+    const getMovieList = async () => {
+      try {
+        const data = await getDocs(moviesCollectionRef)
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+           id: doc.id,
+          }))
+          setWatchlistMovie(filteredData)
+        
+      } catch(err) {
+        console.error(err)
+      }
+    }
+    
+    getMovieList();
+
+    
+
+  }, [])
+
+  React.useEffect(() => {
+    
+    watchlistMovie.map(item => {
+      if (`${item.userEmail}` === `${auth.currentUser.email}`) {
+      fetch(`https://api.themoviedb.org/3/movie/${item.movieId}?language=en-US`, options)
+      .then(response => response.json())
+      .then(data => setWatchlistMovieElement(prev => ([
+        ...prev,
+        data,
+      ])))
+      .catch(err => console.error(err));
+      }
+      }
+    )
+  }, [watchlistMovie])
+
+
+
+
+  
+  
+
+  
+
+  
+
   const moviesResults = movies.results
+  
   let moviesElement = "Loading..."
+
+
+  
+  
 
   function nextPage() {
     setPage(prev => prev + 1)
@@ -43,12 +110,19 @@ export default function Browse( { children }) {
     color: "green"
   }
 
-  function addToWatchList(email, id) {
-    AddToWatchList(email, id)
-   }
+  /*
+  fetch('https://api.themoviedb.org/3/movie/157336?language=en-US', options)
+  .then(response => response.json())
+  .then(response => console.log(response))
+  .catch(err => console.error(err));
+  */
 
-  if (moviesResults) {
-    moviesElement = moviesResults.map((item, index) => {
+
+
+  console.log(watchlistMovieElement)
+
+  if (watchlistMovieElement) {
+    moviesElement = watchlistMovieElement.map((item, index) => {
     return (
       <div>
         <div 
@@ -120,7 +194,7 @@ export default function Browse( { children }) {
   
             <div className="active-div-info-div">
               <button className="active-div-watchlist-button"
-              onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
+              onClick={() => addToWatchList(index)}>Add to watchlist</button>
               <h3>{item.overview}</h3>
             </div>
           </div>
@@ -133,20 +207,12 @@ export default function Browse( { children }) {
   
   })}
 
-    console.log(children)
   return (
     <div className="movie-elements-search-div">
-          {searchText && <h1 style={{marginLeft: "280px", color: "white"}}>Search results for: {searchText}</h1>}
+          
         <div className="movie-elements-search-elements">
           {moviesElement}
         </div>
-
-        <div className="page-buttons-div">
-          <img src={`${previousPageIcon}`} onClick={prevPage} />
-          <h3>{page}</h3>
-          <img src={`${nextPageIcon}`} onClick={nextPage}/>
-        </div>
-      
 
         <Footer/>
     </div>

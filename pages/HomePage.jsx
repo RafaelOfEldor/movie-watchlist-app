@@ -4,6 +4,8 @@ import Footer from "/components/Footer"
 import Browse from "./Browse"
 import nextPageIcon from "/dist/assets/next-page.svg"
 import previousPageIcon from "/dist/assets/previous-page.svg"
+import { AddToWatchList } from "../components/AddToWatchlist"
+import { auth } from "../firebase"
 
 export default function HomePage() {
 
@@ -25,7 +27,7 @@ export default function HomePage() {
   
 
   
-  const style = `linear-gradient(to bottom, rgba(2,0,36, 0.1) 0%, rgba(0,0,0,0.9) 61%, rgba(0,0,0,0.9) 100%),` 
+  const style = `linear-gradient(to bottom, rgba(2,0,36, 0.001) 0%,  rgba(0,0,0,0.1) 61%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.9) 100%),` 
   const navLinksStyle = {
     color: "green"
   }
@@ -35,8 +37,8 @@ export default function HomePage() {
   //Potential solution for future filters:
   //Create if else inside mapping to seperate categories and have a navlink that says "see all (category)"
   //for the respective movies
- function addToWatchList(id) {
-  alert("Function not yet added, but keep clicking anyway for fun :)")
+ function addToWatchList(email, id) {
+  AddToWatchList(email, id)
  }
 
   
@@ -119,6 +121,7 @@ export default function HomePage() {
         backgroundImage:
         `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
         url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
+          
           <button onClick={() => {
             setClick(prev => {
               return (
@@ -140,7 +143,7 @@ export default function HomePage() {
 
             <div className="active-div-info-div">
               <button className="active-div-watchlist-button"
-              onClick={() => addToWatchList(index)}>Add to watchlist</button>
+              onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
               <h3>{item.overview}</h3>
             </div>
           </div>
@@ -235,7 +238,7 @@ if (moviesResults) {
 
           <div className="active-div-info-div">
             <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(index)}>Add to watchlist</button>
+            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
             <h3>{item.overview}</h3>
           </div>
         </div>
@@ -330,7 +333,7 @@ if (moviesResults) {
 
           <div className="active-div-info-div">
             <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(index)}>Add to watchlist</button>
+            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
             <h3>{item.overview}</h3>
           </div>
         </div>
@@ -425,7 +428,7 @@ if (moviesResults) {
 
           <div className="active-div-info-div">
             <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(index)}>Add to watchlist</button>
+            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
             <h3>{item.overview}</h3>
           </div>
         </div>
@@ -515,7 +518,7 @@ if (moviesResults) {
 
           <div className="active-div-info-div">
             <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(index)}>Add to watchlist</button>
+            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
             <h3>{item.overview}</h3>
           </div>
         </div>
@@ -536,9 +539,8 @@ if (moviesResults) {
   //<h1 style={{color: "white", marginLeft: "350px"}}>Popular movies</h1>
   return (
     searchText !== "" ?
-    
       <div className="movie-elements-search-div">
-          <h1 style={{marginLeft: "280px", color: "white"}}>Results for: {searchText}</h1>
+          <h1 style={{marginLeft: "280px", color: "white"}}>Search results for: {searchText}</h1>
         <div className="movie-elements-search-elements">
           {moviesElement}
         </div>
@@ -548,10 +550,10 @@ if (moviesResults) {
           <h3>{page}</h3>
           <img src={`${nextPageIcon}`} onClick={nextPage}/>
         </div>
+      
 
         <Footer/>
       </div>
-    
     
     :
     <div className="home-page-div" style={{backgroundImage: "url(/icons\blue-wavy-background.jpg)"}}>

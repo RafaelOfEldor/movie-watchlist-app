@@ -7,19 +7,26 @@ import messages from "/icons/messages.svg"
 import bell from "/icons/bell.svg"
 import logo from "/icons/logo.png"
 import getMovies from "/api"
+import {db} from "../firebase"
+import {getDocs, collection} from "firebase/firestore"
+import { auth } from "../firebase"
+import { AddToWatchList } from "../components/AddToWatchlist"
 
 
 
 
 
 export default function HomePageLayout() {
-
   const [searchText, setSearchText] = React.useState("")
   const [movies, setMovies] = React.useState([])
   const [topbar, setTopbar] = React.useState(false)
   const [search, setSearch] = React.useState(false)
   const [page, setPage] = React.useState(1)
   const count = React.useRef(1)
+  let j = 0
+
+
+  
 
 
   
@@ -34,11 +41,14 @@ export default function HomePageLayout() {
 
   //Need to watch more lectures on scrimba to learn about useNavigation(), so that i can make a function that navigates to browse with userSearch parameter
   //in the URL as tempText changes
+
+  //For authentication setup watch this video -> https://www.youtube.com/watch?v=PKwu15ldZ7k&ab_channel=WebDevSimplified
+
+  //username for the movie db is: anonymous225511
   
 
   React.useEffect(() => {
 
-  
     const options = {
       method: 'GET',
       headers: {
@@ -46,12 +56,17 @@ export default function HomePageLayout() {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDc4ODJlZjZkNWQzZTU2NDhmZmEyNGY5YTEzM2U5YSIsInN1YiI6IjY0ZTc2YWJjNTk0Yzk0MDExYzM1ZjVkNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RDrTbC6bUeqcV0uB3d9_8Q1Tp9HPsMYn85BzGfSRhv4'
       }
     };
+
+  
+    
+
     if (searchText) {
-      if (searchText.length <1 & page !== 1) {
+      j = searchText.length / 3
+      if (searchText.length > 1 & page !== 1) {
         setPage(1)
       }
       const timeoutId = setTimeout(() => {
-        fetch(`https://api.themoviedb.org/3/search/movie?query=${searchText} : ""}&include_adult=false&language=en-US&page=${page}`, options)
+        fetch(`https://api.themoviedb.org/3/search/movie?${searchText &&( "query=" + searchText + "&")}include_adult=false&language=en-US&page=${page}`, options)
         .then(response => response.json())
         .then(data => setMovies(data))
         .catch(err => console.error(err))
@@ -61,7 +76,7 @@ export default function HomePageLayout() {
       
         
     } else {
-      fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`, options) 
+      fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`, options) 
         .then(response => response.json())
         .then(data => setMovies(data))
         .catch(err => console.error(err))
@@ -70,7 +85,7 @@ export default function HomePageLayout() {
   }, [searchText, page])
 
   const changeBackground = () => {
-    console.log(window.scrollY)
+    
     if (window.scrollY > 80) {
       setTopbar(true)
     } else {

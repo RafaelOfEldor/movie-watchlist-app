@@ -1,27 +1,68 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {NavLink, Outlet } from "react-router-dom"
+import {NavLink, Outlet, useOutletContext } from "react-router-dom"
 import browse from "/icons/browse.svg"
 import discover from "/icons/discover.svg"
 import home from "/icons/home.svg"
 import settings from "/icons/settings.svg"
 import logout from "/icons/logout.svg"
 import watchlist from "/icons/watchlist.svg"
+import guestUser from "/icons/guest.png"
+import loginIcon from "/icons/login.png"
+import { auth, signup, setUser } from "../firebase"
+import { signOut } from "firebase/auth"
 
 //potential fix for icons turning green on hover is to download a second svg for each icon with their color being blue,
 //and then conditionally swap them rather than using the filter style in css
 
 export default function SideBar() {
 
+const [currentUser, setCurrentUser] = React.useState(null)
+
   const activeStyle = {
     
     color: "#00C2FF",
     filter: "invert(60%) sepia(700%) saturate(1000%) hue-rotate(157deg) brightness(100%) contrast(108%)"
   }
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(null)
+  console.log(auth?.currentUser?.email)
+
+  React.useEffect(() => {
+    const unsubscribe = setUser(auth, user => {
+      if (user) {
+        setCurrentUser(auth.currentUser)
+        console.log(currentUser)
+      } else {
+        setCurrentUser(null)
+      }
+    })
+
+    return unsubscribe
+    }, [])
+
+  
+
+  async function logOut() {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div className='sidebar-layout'>
+      
       <div className='sidebar-main-div'>
+          
+        <div className='user-siderbar-div'>
+          <img src={`${guestUser}`} />
+          <h3>{currentUser ? `${currentUser.email}` : `guest`}</h3>
+        </div>
+      
         <div>
+        <hr style={{width: "90%", marginTop: "20px"}}/>
           <div className='sidebar-sub-div menu'>
             <h3 style={{marginLeft: "20px"}}>Menu</h3>
           </div>
@@ -40,6 +81,7 @@ export default function SideBar() {
             <img src={browse} alt="" />
             <h3 style={{marginLeft: "20px"}}>Browse</h3>
           </NavLink>
+
           <NavLink className='sidebar-sub-div discover'
           to="discover"
           style={({isActive}) => isActive ? activeStyle : null}>
@@ -56,21 +98,38 @@ export default function SideBar() {
           
           <NavLink className='sidebar-sub-div watchlist'
           to="watchlist"
+          state={{message: "You must be logged in to see watchlist", intendedPath: "watchlist"}}
           style={({isActive}) => isActive ? activeStyle : null}>
             <img src={watchlist} alt="" />
             <h3 style={{marginLeft: "20px"}}>Watchlist</h3>
           </NavLink>
+
           <NavLink className='sidebar-sub-div settings'
           to="settings"
+          state={{message: "You must be logged in to see your settings", intendedPath: "settings"}}
           style={({isActive}) => isActive ? activeStyle : null}>
             <img src={settings} alt="" />
             <h3 style={{marginLeft: "20px"}}>Settings</h3>
           </NavLink>
-          <NavLink className='sidebar-sub-div logout'
-          to="">
-            <img src={logout} alt="" />
-            <h3 style={{marginLeft: "20px"}}>Log out</h3>
-          </NavLink>
+          {
+            currentUser ?
+            <div 
+            className='sidebar-sub-div logout'
+            onClick={logOut}>
+              <img src={logout} alt="" />
+              <h3 style={{marginLeft: "20px"}}>
+                Log out
+              </h3>
+            </div>
+            :
+            <NavLink className='sidebar-sub-div login'
+            to="login">
+              <img src={loginIcon} alt="" />
+              <h3 style={{marginLeft: "20px"}}>
+                Log in
+              </h3>
+            </NavLink>
+          }
         </div>
       </div>
       <Outlet /> 
