@@ -77,15 +77,15 @@ export default function LoginPage() {
           
           <input placeholder="Email address" ref={emailRef} name="email"/>
           
-          <input placeholder="Password" ref={passwordRef} name="password"/>
+          <input placeholder="Password" ref={passwordRef} type="password" name="password"/>
 
-          <input placeholder="Confirm assword" ref={passwordConfirmRef} name="confirmPassword"/>
+          <input placeholder="Confirm assword" ref={passwordConfirmRef} type="password" name="confirmPassword"/>
           
           <button disabled={loading}> {loading ? `signing up...` : `Sign up`} </button>
         </form>
         <div style={{display: "flex", color: "white"}}>
           <h3>Or sign in with google</h3>
-          <img src={googleIcon} style={{marginLeft: "10px", cursor: "pointer"}} onClick={signInWithGoogle}/>
+          <img src={googleIcon} style={{marginLeft: "10px", cursor: "pointer", maxHeight: "50px", maxWidth: "50px", margin: "0", borderRadius: "50px"}} onClick={signInWithGoogle}/>
         </div>
       </div>
     </div>

@@ -17,72 +17,18 @@ import { AddToWatchList } from "../components/AddToWatchlist"
 
 
 export default function HomePageLayout() {
-  const [searchText, setSearchText] = React.useState("")
-  const [movies, setMovies] = React.useState([])
   const [topbar, setTopbar] = React.useState(false)
-  const [search, setSearch] = React.useState(false)
-  const [page, setPage] = React.useState(1)
-  const count = React.useRef(1)
-  let j = 0
 
-
+  const { movies, searchText, page, search, watchlistMovie, setWatchlistMovie, setPage, setSearchText, setMovies, setSearch }= useOutletContext()
   
 
 
-  
-  
-  
 
-
-  //try this: https://api.themoviedb.org/3/discover/movie/?page=(what you want it to be)
-  //old one: https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc
-  //for searching one: https://api.themoviedb.org/3/discover/movie?query=(search variable here)include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc
-  //failed attempt for search query https://api.themoviedb.org/3/discover/movie?query=${searchText}&include_adult=false&include_video=false&language=en-US&page=1
-
-  //Need to watch more lectures on scrimba to learn about useNavigation(), so that i can make a function that navigates to browse with userSearch parameter
-  //in the URL as tempText changes
-
-  //For authentication setup watch this video -> https://www.youtube.com/watch?v=PKwu15ldZ7k&ab_channel=WebDevSimplified
 
   //username for the movie db is: anonymous225511
   
 
-  React.useEffect(() => {
-
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDc4ODJlZjZkNWQzZTU2NDhmZmEyNGY5YTEzM2U5YSIsInN1YiI6IjY0ZTc2YWJjNTk0Yzk0MDExYzM1ZjVkNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RDrTbC6bUeqcV0uB3d9_8Q1Tp9HPsMYn85BzGfSRhv4'
-      }
-    };
-
   
-    
-
-    if (searchText) {
-      j = searchText.length / 3
-      if (searchText.length > 1 & page !== 1) {
-        setPage(1)
-      }
-      const timeoutId = setTimeout(() => {
-        fetch(`https://api.themoviedb.org/3/search/movie?${searchText &&( "query=" + searchText + "&")}include_adult=false&language=en-US&page=${page}`, options)
-        .then(response => response.json())
-        .then(data => setMovies(data))
-        .catch(err => console.error(err))
-    }, 500)
-
-    return () => clearTimeout(timeoutId)
-      
-        
-    } else {
-      fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`, options) 
-        .then(response => response.json())
-        .then(data => setMovies(data))
-        .catch(err => console.error(err))
-    }
-    
-  }, [searchText, page])
 
   const changeBackground = () => {
     
@@ -111,7 +57,7 @@ export default function HomePageLayout() {
           <img src={logo} alt="" className="homepage-top-layout-logo"/>
         </div>
         
-        <input name="search-bar"type="text" placeholder='Search movies, series, and ...' onChange={(e) => handleChange(e)} value={searchText} />
+        <input name="search-bar" type="text" placeholder='Search movies, series, and ...' onChange={(e) => handleChange(e)} value={searchText} />
         <div className='homepage-top-layout-icons-div'>
           <div className='homepage-circle bell'>
           <img src={circle} alt=""/>
@@ -130,7 +76,7 @@ export default function HomePageLayout() {
         </div>
       </div>
 
-      <Outlet context={{ movies, searchText, page, setPage }}/>
+      <Outlet context={{ movies, searchText, page, watchlistMovie, setWatchlistMovie, setPage }}/>
     </div>
   )
 }

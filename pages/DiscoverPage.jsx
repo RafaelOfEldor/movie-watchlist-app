@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink, useNavigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink } from "react-router-dom"
 import Footer from "/components/Footer"
 import Browse from "./Browse"
 import nextPageIcon from "/dist/assets/next-page.svg"
@@ -9,8 +9,9 @@ import { auth } from "../firebase"
 
 export default function HomePage() {
 
+  
 
-      const navigate = useNavigate()
+      
 
   const [click, setClick] = React.useState({
     click: false,
@@ -36,10 +37,26 @@ export default function HomePage() {
   //Potential solution for future filters:
   //Create if else inside mapping to seperate categories and have a navlink that says "see all (category)"
   //for the respective movies
- 
+  const [tempBoolean, setTempBoolean] = React.useState(false)
+  function addToWatchList(email, id) {
+      setTempBoolean(true)
+      if (auth?.currentUser) {
+        watchlistMovie.map(item => {
+          if (item.movieId === id) {
+            setTempBoolean(false)
+          }
+        })
+        if (tempBoolean) {
+          AddToWatchList(email, id)
+        }
+        setTempBoolean(false)
+      } else {
+        navigate("/login")
+      }
+     }
 
   
-  const { movies,  searchText, watchlistMovie, setWatchlistMovie, page, setPage } = useOutletContext()
+  const { movies,  searchText, page, setPage } = useOutletContext()
   const moviesResults = movies.results
   let moviesElement = "Loading..."
   let actionMovieElement = "Loading..."
@@ -47,14 +64,6 @@ export default function HomePage() {
   let trendingMovieElement = "Loading..."
   let comedyMovieElement = "Loading..."
   let category = ""
-
-  function addToWatchList(email, id) {
-    if (auth?.currentUser) {
-        AddToWatchList(email, id)
-    } else {
-      navigate("/login")
-    }
-   }
 
   function nextPage() {
     setPage(prev => prev + 1)
@@ -167,12 +176,21 @@ export default function HomePage() {
 if (moviesResults) {
   let movieCount = 0
   trendingMovieElement = moviesResults.map((item, index) => {
-    if (item.popularity > 2000 && movieCount < 1) {
+    if (item.popularity > 2000 && movieCount < 4) {
       movieCount++
   return (
-    <div className="movie-element-homepage-banner-container">
+    <div>
       <div 
-      
+      onClick={() => {
+        setClick(prev => {
+          return (
+            {
+              click: !prev.click,
+              index: index
+            }
+            )
+          })
+        }}
       onMouseOver={() => {
         setHover(prev => {
           return (
@@ -184,7 +202,7 @@ if (moviesResults) {
           })
       }}
         
-        className="movie-element-homepage-banner"
+        className="movie-element-div"
         onMouseLeave={() => {
           setHover(prev => {
             return (
@@ -197,41 +215,20 @@ if (moviesResults) {
             })
         }}
           style={{backgroundImage: `${hover.hover && hover.index === index && hover.category === "trending" ? null : style}
-          linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.7500175070028011) 71%, rgba(5, 2, 15,0.9847514005602241) 90%),
-      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`, cursor: "auto"}}
+          url(https://image.tmdb.org/t/p/original${item.poster_path})`}}
 
         
         >
           <div>
             <h1 >{item.title}</h1>
-            <h4>{item.release_date.split("-").shift()}</h4>
-            <h4>{item.overview} / 10</h4>
-            <button 
-              style={{width: "10vw",}}
-              className="active-div-watchlist-button"
-              onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>
-              Add to watchlist
-            </button>
-            <button className="active-div-watchlist-button"
-            onClick={() => {
-              setClick(prev => {
-                return (
-                  {
-                    click: !prev.click,
-                    index: index
-                  }
-                  )
-                })
-              }}
-            style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}>
-              Read more</button>
+            <h3>{item.vote_average} / 10</h3>
           </div>
       </div>
       {click.click && click.index === index &&
       <div className="movie-element-active-div" style={{
       backgroundImage:
       `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-      url(https://image.tmdb.org/t/p/original${item.poster_path})`}}>
+      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
         <button onClick={() => {
           setClick(prev => {
             return (
@@ -252,12 +249,7 @@ if (moviesResults) {
           </div>
 
           <div className="active-div-info-div">
-            <button className={watchlistMovie.map(itemTwo => {
-              if (itemTwo.movieId === item.id ) {
-                return true
-              }
-            }
-            ) ? "active-div-watchlist-button" : "xx"}
+            <button className="active-div-watchlist-button"
             onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
             <h3>{item.overview}</h3>
           </div>
@@ -559,30 +551,53 @@ if (moviesResults) {
   //<h1 style={{color: "white", marginLeft: "350px"}}>Popular movies</h1>
   return (
     
-    <div className="home-page-div">
-      
-      <div className="homepage-div banner">
+    <div className="discover-page-div" style={{}}>
+
+      <div className="category-div action">
+        <h1>Trending:</h1>
+        <NavLink
+        to="."
+        style={navLinksStyle}>
+          See all trending movies {`->`}
+        </NavLink>
+      </div>
+      <div className="movie-elements-div action">
         {moviesResults ? trendingMovieElement : "loading..."}
       </div>
 
-      <div className="homepage-div-row one">
-        <h2>What's new?</h2>
+      <div className="category-div action">
+        <h1>High rating movies:</h1>
+        <NavLink
+        to="."
+        style={navLinksStyle}>
+          See all high rating movies {`->`}
+        </NavLink>
       </div>
-      <div className="movie-homepage-elements-div-row one">
+      <div className="movie-elements-div action">
         {moviesResults ? highRatingMovieElements : "loading..."}
       </div>
 
-      <div className="homepage-div-row two">
-        <h2>Action movies:</h2>
+      <div className="category-div action">
+        <h1>Action movies:</h1>
+        <NavLink
+        to="."
+        style={navLinksStyle}>
+          See all action movies {`->`}
+        </NavLink>
       </div>
-      <div className="movie-homepage-elements-div-row two">
+      <div className="movie-elements-div action">
         {moviesResults ? actionMovieElement : "loading..."}
       </div>
 
-      <div className="homepage-div-row three">
-        <h2>Comedy movies:</h2>
+      <div className="category-div action">
+        <h1>Comedy movies:</h1>
+        <NavLink
+        to="."
+        style={navLinksStyle}>
+          See all comedy movies {`->`}
+        </NavLink>
       </div>
-      <div className="movie-homepage-elements-div-row three">
+      <div className="movie-elements-div action">
         {moviesResults ? comedyMovieElement : "loading..."}
       </div>
       <Footer />

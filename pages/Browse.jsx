@@ -15,6 +15,8 @@ export default function Browse( { children }) {
   const moviesResults = movies.results
   let moviesElement = "Loading..."
 
+
+
   function nextPage() {
     setPage(prev => prev + 1)
     window.scrollTo({top: "0", transition: "ease-in-out 1s"})
@@ -44,7 +46,11 @@ export default function Browse( { children }) {
   }
 
   function addToWatchList(email, id) {
-    AddToWatchList(email, id)
+    if (auth?.currentUser) {
+        AddToWatchList(email, id)
+    } else {
+      navigate("/login")
+    }
    }
 
   if (moviesResults) {
@@ -73,7 +79,7 @@ export default function Browse( { children }) {
             })
         }}
           
-          className="movie-element-div"
+          className="movie-element-div browse"
           onMouseLeave={() => {
             setHover(prev => {
               return (
@@ -90,7 +96,7 @@ export default function Browse( { children }) {
           
           >
             <div>
-              <h1 >{item.title}</h1>
+              <h3>{item.title}</h3>
               <h3>{item.vote_average} / 10</h3>
             </div>
         </div>
@@ -133,11 +139,10 @@ export default function Browse( { children }) {
   
   })}
 
-    console.log(children)
   return (
     <div className="movie-elements-search-div">
-          {searchText && <h1 style={{marginLeft: "280px", color: "white"}}>Search results for: {searchText}</h1>}
-        <div className="movie-elements-search-elements">
+          <h1 style={{marginLeft: "280px", color: "white"}}>{searchText ? `Search results for: ${searchText}` : `Browse all movies`}</h1>
+        <div className="movie-elements-div browse">
           {moviesElement}
         </div>
 

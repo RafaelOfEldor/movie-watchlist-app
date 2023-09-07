@@ -7,14 +7,15 @@ import Footer from "/components/Footer"
 import { auth } from "../firebase"
 import {db} from "../firebase"
 import {getDocs, collection} from "firebase/firestore"
+import { RemoveFromWatchlist } from "../components/AddToWatchlist"
 
 
 
 export default function Browse( { children }) {
-
-  const [watchlistMovie, setWatchlistMovie] = React.useState([])
   const [watchlistMovieElement, setWatchlistMovieElement] = React.useState([])
-  const { movies, searchText, page, setPage, currentUser, setCurrentUser  } = useOutletContext()
+  const { movies, searchText, page, watchlistMovie, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
+  const renderCount = React.useRef(0)
+
 
   const options = {
     method: 'GET',
@@ -36,6 +37,7 @@ export default function Browse( { children }) {
            id: doc.id,
           }))
           setWatchlistMovie(filteredData)
+          
         
       } catch(err) {
         console.error(err)
@@ -48,20 +50,28 @@ export default function Browse( { children }) {
 
   }, [])
 
+  console.log(watchlistMovie)
+
   React.useEffect(() => {
+    if (renderCount.current > 1) {
+      watchlistMovie.map(item => {
+        if (`${item.userEmail}` === `${auth.currentUser.email}`) {
+        fetch(`https://api.themoviedb.org/3/movie/${item.movieId}?language=en-US`, options)
+        .then(response => response.json())
+        .then(data => setWatchlistMovieElement(prev => ([
+          ...prev,
+          data,
+        ])))
+        .catch(err => console.error(err));
+        }
+        }
+      )
+    }
+    renderCount.current += 1
+    console.log(renderCount.current)
     
-    watchlistMovie.map(item => {
-      if (`${item.userEmail}` === `${auth.currentUser.email}`) {
-      fetch(`https://api.themoviedb.org/3/movie/${item.movieId}?language=en-US`, options)
-      .then(response => response.json())
-      .then(data => setWatchlistMovieElement(prev => ([
-        ...prev,
-        data,
-      ])))
-      .catch(err => console.error(err));
-      }
-      }
-    )
+
+    
   }, [watchlistMovie])
 
 
@@ -71,7 +81,7 @@ export default function Browse( { children }) {
   
 
   
-
+  console.log(watchlistMovie)
   
 
   const moviesResults = movies.results
@@ -79,7 +89,16 @@ export default function Browse( { children }) {
   let moviesElement = "Loading..."
 
 
-  
+  function removeFromWatchlist(email, id) {
+      watchlistMovie.map(item => {
+        if (`${item.userEmail}` === `${email}` & `${item.movieId}` === `${id}`){
+          RemoveFromWatchlist(item.id)
+        }
+        
+      }
+    )
+    
+  }
   
 
   function nextPage() {
@@ -193,8 +212,8 @@ export default function Browse( { children }) {
             </div>
   
             <div className="active-div-info-div">
-              <button className="active-div-watchlist-button"
-              onClick={() => addToWatchList(index)}>Add to watchlist</button>
+              <button className="active-div-watchlist-button remove"
+              onClick={() => removeFromWatchlist(auth?.currentUser?.email, item.id)}>Remove from watchlist</button>
               <h3>{item.overview}</h3>
             </div>
           </div>

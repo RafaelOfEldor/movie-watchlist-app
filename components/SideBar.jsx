@@ -17,6 +17,74 @@ import { signOut } from "firebase/auth"
 
 export default function SideBar() {
 
+  const [searchText, setSearchText] = React.useState("")
+  const [movies, setMovies] = React.useState([])
+  const [watchlistMovie, setWatchlistMovie] = React.useState([])
+  const [search, setSearch] = React.useState(false)
+  const [page, setPage] = React.useState(1)
+  const renderCount = React.useRef(0)
+
+  let j = 0
+
+  React.useEffect(() => {
+    if (renderCount.current === 1) {
+      setPage(1)
+    }
+  }, [])
+
+  React.useEffect(() => {
+
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDc4ODJlZjZkNWQzZTU2NDhmZmEyNGY5YTEzM2U5YSIsInN1YiI6IjY0ZTc2YWJjNTk0Yzk0MDExYzM1ZjVkNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RDrTbC6bUeqcV0uB3d9_8Q1Tp9HPsMYn85BzGfSRhv4'
+      }
+    };
+
+    if (renderCount.current > 0){
+
+      if (searchText) {
+        const timeoutId = setTimeout(() => {
+          fetch(`https://api.themoviedb.org/3/search/movie?${searchText &&( "query=" + searchText + "&")}include_adult=false&language=en-US&page=${page}`, options)
+          .then(response => response.json())
+          .then(data => setMovies(data))
+          .catch(err => console.error(err))
+      }, 500)
+  
+      return () => clearTimeout(timeoutId)
+        
+          
+      } else {
+        
+        fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`, options) 
+          .then(response => response.json())
+          .then(data => setMovies(data))
+          .catch(err => console.error(err))
+      }
+
+
+      console.log(movies)
+
+
+    }
+
+    
+    renderCount.current += 1
+
+   
+
+  
+    
+    
+    
+    
+  }, [searchText, page])
+
+  React.useEffect(() => {
+    setPage(1)
+  }, [searchText])
+
 const [currentUser, setCurrentUser] = React.useState(null)
 
   const activeStyle = {
@@ -26,13 +94,12 @@ const [currentUser, setCurrentUser] = React.useState(null)
   }
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(null)
-  console.log(auth?.currentUser?.email)
+  
 
   React.useEffect(() => {
     const unsubscribe = setUser(auth, user => {
       if (user) {
         setCurrentUser(auth.currentUser)
-        console.log(currentUser)
       } else {
         setCurrentUser(null)
       }
@@ -49,6 +116,12 @@ const [currentUser, setCurrentUser] = React.useState(null)
     } catch (error) {
       console.error(error)
     }
+  }
+
+  function resetStates() {
+    window.scrollTo(0, 0)
+    setPage(1)
+    setSearchText("")
   }
 
   return (
@@ -68,6 +141,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           </div>
           
           <NavLink className='sidebar-sub-div home'
+          onClick={resetStates}
           to="."
           end
           style={({isActive}) => isActive ? activeStyle : null}>
@@ -76,6 +150,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           </NavLink>
 
           <NavLink className='sidebar-sub-div browse'
+          onClick={resetStates}
           to="browse"
           style={({isActive}) => isActive ? activeStyle : null}>
             <img src={browse} alt="" />
@@ -83,6 +158,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           </NavLink>
 
           <NavLink className='sidebar-sub-div discover'
+          onClick={resetStates}
           to="discover"
           style={({isActive}) => isActive ? activeStyle : null}>
             <img src={discover} alt="" />
@@ -97,6 +173,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           </div>
           
           <NavLink className='sidebar-sub-div watchlist'
+          onClick={resetStates}
           to="watchlist"
           state={{message: "You must be logged in to see watchlist", intendedPath: "watchlist"}}
           style={({isActive}) => isActive ? activeStyle : null}>
@@ -105,6 +182,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           </NavLink>
 
           <NavLink className='sidebar-sub-div settings'
+          onClick={resetStates}
           to="settings"
           state={{message: "You must be logged in to see your settings", intendedPath: "settings"}}
           style={({isActive}) => isActive ? activeStyle : null}>
@@ -123,6 +201,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
             </div>
             :
             <NavLink className='sidebar-sub-div login'
+            onClick={resetStates}
             to="login">
               <img src={loginIcon} alt="" />
               <h3 style={{marginLeft: "20px"}}>
@@ -132,7 +211,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           }
         </div>
       </div>
-      <Outlet /> 
+      <Outlet context={{ movies, searchText, page, search, watchlistMovie, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
     </div>
     )
 }

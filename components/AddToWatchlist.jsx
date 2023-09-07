@@ -4,7 +4,7 @@ import { signInWithPopup } from "firebase/auth"
 import { auth, login, setUser, googleProvider } from "../firebase"
 import googleIcon from "../icons/google.svg"
 import {db} from "../firebase"
-import {getDocs, collection, addDoc} from "firebase/firestore"
+import {getDocs, collection, addDoc, deleteDoc, doc} from "firebase/firestore"
 
 const moviesCollectionRef = collection(db, "Watchlist-Movies")
 
@@ -16,4 +16,14 @@ export const AddToWatchList = async (email, id) => {
     console.error(err)
   }
 }
+
+export const RemoveFromWatchlist = async (id) => {
+  const movieDoc = doc(db, "Watchlist-Movies", id)
+  try {
+    await deleteDoc(movieDoc)
+  } catch(err) {
+    console.error(err)
+  }
+}
  
+

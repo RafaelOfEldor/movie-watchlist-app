@@ -52,26 +52,29 @@ export default function LoginPage() {
     <div className="login-form-page">
       
       <div className="login-form-div">
-        <h1>{location.state?.message}</h1>
+        <h2>{location.state?.message}</h2>
         <h1 style={{color: "purple", marginTop: "7vh"}}>Sign into your account</h1>
         <form onSubmit={(e) => handleSubmit(e)}>
           
           <input placeholder="Email address" name="email" />
           
-          <input placeholder="Password" name="password"/>
+          <input placeholder="Password" type="password" name="password"/>
           
           <button disabled={loading}>{loading ? `signing up...` : `Sign up`}</button>
         </form>
 
-        <h3 style={{color: "white"}}>Dont have an account? 
+        <div style={{display: "flex", alignItems: "center", flexDirection: "column", color: "white", marginBottom: "20px"}}>
+          <h3>Or sign in using</h3>
+          <img src={googleIcon} style={{marginLeft: "10px", cursor: "pointer", maxHeight: "50px", maxWidth: "50px", margin: "0", borderRadius: "50px"}}
+          onClick={signInWithGoogle}/>
+        </div>
+
+        <h3 style={{color: "white", margin: "0"}}>Dont have an account? 
           <NavLink to="/signup" style={{textDecoration: "underline"}}
           state={{intendedPath: location.state?.intendedPath}}> Signup </NavLink>
           here
         </h3>
-        <div style={{display: "flex", color: "white"}}>
-          <h3>Or sign in with google</h3>
-          <img src={googleIcon} style={{marginLeft: "10px", cursor: "pointer"}} onClick={signInWithGoogle}/>
-        </div>
+        
       </div>
     </div>
   )

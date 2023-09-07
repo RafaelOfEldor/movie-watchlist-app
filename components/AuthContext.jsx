@@ -6,8 +6,8 @@ export function AuthContext()  {
   const [isAuthorized, setIsAuthorized] = useState(false)
   
   
-  const { movies,  searchText, page, setPage, currentUser, watchlistMovieElement, setCurrentUser } = useOutletContext()
-  console.log(movies)
+  const { movies, searchText, page, search, watchlistMovie, setWatchlistMovie, setPage, setSearchText, setMovies, setSearch } = useOutletContext()
+  
 
 
 
@@ -17,5 +17,5 @@ export function AuthContext()  {
 
   //got firebase auth to work, but now i have to restructure my router so that the right contexts get to the right places
 
-  return <Outlet context={{movies, searchText, page, setPage, currentUser, setCurrentUser}}/>
+  return <Outlet context={{movies, searchText, page, search, watchlistMovie, setWatchlistMovie, setPage, setSearchText, setMovies, setSearch}}/>
 }
