@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {NavLink, Outlet, useOutletContext } from "react-router-dom"
+import {NavLink, Outlet, useOutletContext, useNavigate, useSearchParams } from "react-router-dom"
 import browse from "/icons/browse.svg"
 import discover from "/icons/discover.svg"
 import home from "/icons/home.svg"
@@ -11,6 +11,8 @@ import guestUser from "/icons/guest.png"
 import loginIcon from "/icons/login.png"
 import { auth, signup, setUser } from "../firebase"
 import { signOut } from "firebase/auth"
+import {db} from "../firebase"
+import {getDocs, collection} from "firebase/firestore"
 
 //potential fix for icons turning green on hover is to download a second svg for each icon with their color being blue,
 //and then conditionally swap them rather than using the filter style in css
@@ -18,13 +20,52 @@ import { signOut } from "firebase/auth"
 export default function SideBar() {
 
   const [searchText, setSearchText] = React.useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
   const [movies, setMovies] = React.useState([])
   const [watchlistMovie, setWatchlistMovie] = React.useState([])
   const [search, setSearch] = React.useState(false)
   const [page, setPage] = React.useState(1)
+  const [watchlistStateChangeCounter, setWatchlistStateChangeCounter] = React.useState(0)
   const renderCount = React.useRef(0)
+  const navigate = useNavigate()
+  const searchFilter = searchParams.get("query")
+  const typeFilter = searchParams.get("type")
+  const movieParam = searchParams.get("movieId")
+  const [category, setCategory] = React.useState(null)
 
   let j = 0
+
+  React.useEffect(() => {
+    
+    const moviesCollectionRef = collection(db, "Watchlist-Movies")
+  
+    const getMovieList = async () => {
+      try {
+        const data = await getDocs(moviesCollectionRef)
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+           id: doc.id,
+          }))
+          setWatchlistMovie(filteredData)
+          
+        
+      } catch(err) {
+        console.error(err)
+      }
+    }
+    
+    getMovieList();
+
+    
+
+  }, [watchlistStateChangeCounter])
+
+
+  React.useEffect(() => {
+    setPage(1)
+
+  }, [searchParams])
+  
 
   React.useEffect(() => {
     if (renderCount.current === 1) {
@@ -33,6 +74,37 @@ export default function SideBar() {
   }, [])
 
   React.useEffect(() => {
+    switch (typeFilter) {
+      case "action": setCategory(28) 
+      break;
+      case "comedy": setCategory(35)
+      break;
+      case "fantasy": setCategory(14)
+      break;
+      case "animation": setCategory(16)
+      break;
+      case "mystery": setCategory(9648)
+      break;
+      case "thriller": setCategory(53)
+      break;
+      case "romance": setCategory(10749)
+      break;
+      case "drama": setCategory(18)
+      break;
+      case "adventure": setCategory(12)
+      break;
+    }
+  }, [searchParams])
+
+  
+
+  React.useEffect(() => {
+    
+
+    
+
+    
+      
 
     const options = {
       method: 'GET',
@@ -45,8 +117,13 @@ export default function SideBar() {
     if (renderCount.current > 0){
 
       if (searchText) {
+        setCategory(null)
+        setSearchParams({query: `${searchFilter}`})
+        console.log(searchParams)
+        console.log(searchFilter)
+        navigate(`browse/movies?query=${searchText}`)
         const timeoutId = setTimeout(() => {
-          fetch(`https://api.themoviedb.org/3/search/movie?${searchText &&( "query=" + searchText + "&")}include_adult=false&language=en-US&page=${page}`, options)
+          fetch(`https://api.themoviedb.org/3/search/movie?query=${searchFilter}&include_adult=false&language=en-US&page=${page}`, options)
           .then(response => response.json())
           .then(data => setMovies(data))
           .catch(err => console.error(err))
@@ -55,19 +132,27 @@ export default function SideBar() {
       return () => clearTimeout(timeoutId)
         
           
-      } else {
-        
+      } else if (searchParams.get("type")){
+          return;
+      } else if (searchParams.get("movieId")){
+        return;
+    } else {
+        setSearchParams({})
         fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`, options) 
           .then(response => response.json())
           .then(data => setMovies(data))
           .catch(err => console.error(err))
       }
+      
+      
+    
+    }
 
-
+    
       console.log(movies)
 
 
-    }
+    
 
     
     renderCount.current += 1
@@ -79,7 +164,27 @@ export default function SideBar() {
     
     
     
-  }, [searchText, page])
+  }, [searchText, page, searchParams])
+
+  React.useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZDc4ODJlZjZkNWQzZTU2NDhmZmEyNGY5YTEzM2U5YSIsInN1YiI6IjY0ZTc2YWJjNTk0Yzk0MDExYzM1ZjVkNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RDrTbC6bUeqcV0uB3d9_8Q1Tp9HPsMYn85BzGfSRhv4'
+      }
+    };
+
+    if (searchParams.get("type")){
+      fetch(`https://api.themoviedb.org/3/discover/movie?api_key=xxx&with_genres=${category}&page=${page}`, options) 
+          .then(response => response.json())
+          .then(data => setMovies(data))
+          .catch(err => console.error(err))
+  }
+    
+  }, [category, page])
+
+  
 
   React.useEffect(() => {
     setPage(1)
@@ -107,6 +212,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
 
     return unsubscribe
     }, [])
+    
 
   
 
@@ -119,7 +225,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
   }
 
   function resetStates() {
-    window.scrollTo(0, 0)
+    window.scrollTo({top: 0, left: 0, behavior: "smooth"})
     setPage(1)
     setSearchText("")
   }
@@ -151,7 +257,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
 
           <NavLink className='sidebar-sub-div browse'
           onClick={resetStates}
-          to="browse"
+          to="browse/movies"
           style={({isActive}) => isActive ? activeStyle : null}>
             <img src={browse} alt="" />
             <h3 style={{marginLeft: "20px"}}>Browse</h3>
@@ -211,7 +317,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           }
         </div>
       </div>
-      <Outlet context={{ movies, searchText, page, search, watchlistMovie, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
+      <Outlet context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
     </div>
     )
 }

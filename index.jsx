@@ -12,6 +12,7 @@ import Browse from "./pages/Browse"
 import NotFOundPage from './pages/NotFoundPage';
 import WatchlistPage from './pages/WatchlistPage';
 import DiscoverPage from './pages/DiscoverPage';
+import MovieInfoPage from './pages/MovieInfoPage';
 
 
 
@@ -22,15 +23,7 @@ function App() {
   /*
                                                           HIGH PRIORITY
 
-  The current homepage is the way i want the discovery page to be, with the added functionality of being able to see all the movies
-  of the different genres. I want the homepage to be a nice looking page with the current most trending movie as a big individually-customized banner,
-  with a "what's new rotation" as well as some other things that aren't too important to be specific about. 
-
-  I also want to create a better user experience when clicking add to watchlist, or remove from watchlist, as well as good redirects and navigations
-  for instance redirecting after adding to or removing wathclist, redirecting from login without intended-path,
-  and redirecting to browse when entering in search or if you click the search icon, depends on how i end up styling/routing homepage and discovery page
-  
-  fixing search parameters. Only thing required is when you write something into searchbar it shows /browse?search="searchText"
+  pagination on the discover page and homepage for rotation of movies
 
   making background blurry and stopping scroll when selecting a movie
 
@@ -41,6 +34,8 @@ function App() {
                                                           LOW PRIORITY
 
   Adding a movie specific page with more info(actors, release date etc.), pictures, and trailers as well as link to imdb
+
+  navigation history for when you click on read more and want to go back
 
   styling the login and create user forms and pages better
   
@@ -56,8 +51,9 @@ function App() {
             <Route path="/" element={<HomePageLayout />}>
 
               <Route index element={<HomePage />} />
-              <Route path="browse" element={<Browse />}/>
+              <Route path="browse/:search" element={<Browse />}/>
               <Route path="discover" element={<DiscoverPage />}/>
+              <Route path="browse/movies/:movieId" element={<MovieInfoPage />}/>
 
                 <Route element={<AuthorizedPage />}>
                   <Route path="watchlist" element={<WatchlistPage />}/>

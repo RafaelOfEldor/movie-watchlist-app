@@ -11,9 +11,9 @@ import { RemoveFromWatchlist } from "../components/AddToWatchlist"
 
 
 
-export default function Browse( { children }) {
+export default function WatchlistPage( { children }) {
   const [watchlistMovieElement, setWatchlistMovieElement] = React.useState([])
-  const { movies, searchText, page, watchlistMovie, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
+  const { movies, searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
   const renderCount = React.useRef(0)
 
 
@@ -25,35 +25,13 @@ export default function Browse( { children }) {
     }
   };
 
+  
+
+
   React.useEffect(() => {
     setWatchlistMovieElement([])
-    const moviesCollectionRef = collection(db, "Watchlist-Movies")
-  
-    const getMovieList = async () => {
-      try {
-        const data = await getDocs(moviesCollectionRef)
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-           id: doc.id,
-          }))
-          setWatchlistMovie(filteredData)
-          
-        
-      } catch(err) {
-        console.error(err)
-      }
-    }
     
-    getMovieList();
-
-    
-
-  }, [])
-
-  console.log(watchlistMovie)
-
-  React.useEffect(() => {
-    if (renderCount.current > 1) {
+    if (renderCount.current > 0) {
       watchlistMovie.map(item => {
         if (`${item.userEmail}` === `${auth.currentUser.email}`) {
         fetch(`https://api.themoviedb.org/3/movie/${item.movieId}?language=en-US`, options)
@@ -72,7 +50,7 @@ export default function Browse( { children }) {
     
 
     
-  }, [watchlistMovie])
+  }, [watchlistMovie, watchlistStateChangeCounter])
 
 
 
@@ -81,7 +59,7 @@ export default function Browse( { children }) {
   
 
   
-  console.log(watchlistMovie)
+  
   
 
   const moviesResults = movies.results
@@ -90,15 +68,18 @@ export default function Browse( { children }) {
 
 
   function removeFromWatchlist(email, id) {
-      watchlistMovie.map(item => {
-        if (`${item.userEmail}` === `${email}` & `${item.movieId}` === `${id}`){
-          RemoveFromWatchlist(item.id)
-        }
-        
-      }
-    )
     
-  }
+    watchlistMovie.map(item => {
+     if (`${item.userEmail}` === `${email}` & `${item.movieId}` === `${id}`){
+       RemoveFromWatchlist(item.id)
+       setWatchlistStateChangeCounter(prev => prev += 1)
+       setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 3000)
+       console.log(watchlistStateChangeCounter)
+     }
+   }
+ )
+ 
+}
   
 
   function nextPage() {
@@ -213,7 +194,17 @@ export default function Browse( { children }) {
   
             <div className="active-div-info-div">
               <button className="active-div-watchlist-button remove"
-              onClick={() => removeFromWatchlist(auth?.currentUser?.email, item.id)}>Remove from watchlist</button>
+              onClick={() => {
+                removeFromWatchlist(auth?.currentUser?.email, item.id)
+                setClick(prev => {
+                  return (
+                    {
+                      click: !prev.click,
+                      index: -1
+                    }
+                    )
+                  })
+              } }>Remove from watchlist</button>
               <h3>{item.overview}</h3>
             </div>
           </div>
@@ -228,9 +219,10 @@ export default function Browse( { children }) {
 
   return (
     <div className="movie-elements-search-div">
-          
+          <h1 style={{marginLeft: "50vw", display: "flex", alignItems: "center", textAlign: "center", 
+          color: "rgba(104, 190, 203, 1)"}}>My watchlist:</h1>
         <div className="movie-elements-search-elements">
-          {moviesElement}
+          {watchlistMovieElement.length > 0 ? moviesElement : "Your watchlist is currently empty"}
         </div>
 
         <Footer/>

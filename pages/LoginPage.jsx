@@ -52,7 +52,9 @@ export default function LoginPage() {
     <div className="login-form-page">
       
       <div className="login-form-div">
-        <h2>{location.state?.message}</h2>
+        <div className="login-form-alert">
+          <h3>{location.state?.message}</h3>
+        </div>
         <h1 style={{color: "purple", marginTop: "7vh"}}>Sign into your account</h1>
         <form onSubmit={(e) => handleSubmit(e)}>
           

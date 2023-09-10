@@ -1,17 +1,18 @@
 import React from "react"
-import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink, useSearchParams, useNavigate } from "react-router-dom"
 import Footer from "/components/Footer"
 import Browse from "./Browse"
 import nextPageIcon from "/dist/assets/next-page.svg"
 import previousPageIcon from "/dist/assets/previous-page.svg"
-import { AddToWatchList } from "../components/AddToWatchlist"
+import { AddToWatchList, RemoveFromWatchlist } from "../components/AddToWatchlist"
 import { auth } from "../firebase"
 
-export default function HomePage() {
+export default function DiscoverPage() {
 
-  
+  const [buttonTimeout, setButtonTimeout] = React.useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
 
-      
 
   const [click, setClick] = React.useState({
     click: false,
@@ -29,7 +30,8 @@ export default function HomePage() {
   
   const style = `linear-gradient(to bottom, rgba(2,0,36, 0.001) 0%,  rgba(0,0,0,0.1) 61%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.9) 100%),` 
   const navLinksStyle = {
-    color: "green"
+    color: "green",
+    marginRight: "80px"
   }
   //to do:
   //each line should have a category above them to the left, and "see all (category)" navlink above them to the right that
@@ -37,26 +39,80 @@ export default function HomePage() {
   //Potential solution for future filters:
   //Create if else inside mapping to seperate categories and have a navlink that says "see all (category)"
   //for the respective movies
-  const [tempBoolean, setTempBoolean] = React.useState(false)
+  
   function addToWatchList(email, id) {
-      setTempBoolean(true)
-      if (auth?.currentUser) {
-        watchlistMovie.map(item => {
-          if (item.movieId === id) {
-            setTempBoolean(false)
+    let tempBool = true
+    if (auth?.currentUser) {
+      setButtonTimeout(true)
+      setWatchlistStateChangeCounter(prev => prev += 1)
+      setTimeout(() => setButtonTimeout(false), 700)
+      watchlistMovie.map((item, index) => {
+        if (item.userEmail === email & item.movieId === id) {
+          tempBool = false
+        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
+          if (tempBool) {
+            console.log(email)
+            console.log(item.userEmail)
+            console.log(item.movieId)
+            console.log(id)
+            console.log(watchlistMovie.length)
+            console.log(index + 1)
+            AddToWatchList(email, id)
+            console.log(watchlistStateChangeCounter)
+            
+            setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
           }
-        })
-        if (tempBoolean) {
-          AddToWatchList(email, id)
         }
-        setTempBoolean(false)
-      } else {
-        navigate("/login")
+      })
+    } else {
+      navigate("/login")
+    }
+   }
+
+    function removeFromWatchlist(email, id) {
+    
+     watchlistMovie.map(item => {
+      if (`${item.userEmail}` === `${email}` & `${item.movieId}` === `${id}`){
+        setButtonTimeout(true)
+        setTimeout(() => setButtonTimeout(false), 700)
+        RemoveFromWatchlist(item.id)
+        setWatchlistStateChangeCounter(prev => prev += 1)
+        setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
+        console.log(watchlistStateChangeCounter)
       }
-     }
+      
+      
+    }
+  )
+  
+}
+
+function checkMovie(movieId) {
+  let tempBoolean = false
+  console.log(auth?.currentUser)
+  if (auth?.currentUser) {
+      if (watchlistMovie.length > 0) {
+        watchlistMovie.map(item => {
+          if (item.movieId === movieId & item.userEmail === auth?.currentUser.email) {
+            console.log("yurr")
+            tempBoolean = true
+          } 
+        })
+      }
+  } else {
+    tempBoolean = false
+  } 
+   return tempBoolean
+ }
+
+
+ function handleReadMore(movieId) {
+   navigate(`/browse/movies/about?movieId=${movieId}`)
+  setSearchText("")
+ }
 
   
-  const { movies,  searchText, page, setPage } = useOutletContext()
+  const { movies,  searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage } = useOutletContext()
   const moviesResults = movies.results
   let moviesElement = "Loading..."
   let actionMovieElement = "Loading..."
@@ -155,10 +211,21 @@ export default function HomePage() {
             </div>
 
             <div className="active-div-info-div">
-              <button className="active-div-watchlist-button"
-              onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
+            <div style={{display: "flex"}}>
+                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                disabled={buttonTimeout}>
+                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                </button>
+                <button className="active-div-watchlist-button"
+                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                onClick={() => handleReadMore(item.id)}
+                disabled={buttonTimeout}>Read more</button>
+              </div>
+              
+              
               <h3>{item.overview}</h3>
-            </div>
+          </div>
           </div>
             
           
@@ -249,8 +316,19 @@ if (moviesResults) {
           </div>
 
           <div className="active-div-info-div">
-            <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
+            <div style={{display: "flex"}}>
+                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                disabled={buttonTimeout}>
+                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                </button>
+                <button className="active-div-watchlist-button"
+                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                onClick={() => handleReadMore(item.id)}
+                disabled={buttonTimeout}>Read more</button>
+            </div>
+              
+              
             <h3>{item.overview}</h3>
           </div>
         </div>
@@ -344,9 +422,20 @@ if (moviesResults) {
           </div>
 
           <div className="active-div-info-div">
-            <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
-            <h3>{item.overview}</h3>
+          <div style={{display: "flex"}}>
+                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                disabled={buttonTimeout}>
+                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                </button>
+                <button className="active-div-watchlist-button"
+                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                onClick={() => handleReadMore(item.id)}
+                disabled={buttonTimeout}>Read more</button>
+              </div>
+              
+              
+              <h3>{item.overview}</h3>
           </div>
         </div>
           
@@ -439,9 +528,20 @@ if (moviesResults) {
           </div>
 
           <div className="active-div-info-div">
-            <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
-            <h3>{item.overview}</h3>
+          <div style={{display: "flex"}}>
+                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                disabled={buttonTimeout}>
+                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                </button>
+                <button className="active-div-watchlist-button"
+                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                onClick={() => handleReadMore(item.id)}
+                disabled={buttonTimeout}>Read more</button>
+              </div>
+              
+              
+              <h3>{item.overview}</h3>
           </div>
         </div>
           
@@ -529,9 +629,20 @@ if (moviesResults) {
           </div>
 
           <div className="active-div-info-div">
-            <button className="active-div-watchlist-button"
-            onClick={() => addToWatchList(auth?.currentUser?.email, item.id)}>Add to watchlist</button>
-            <h3>{item.overview}</h3>
+          <div style={{display: "flex"}}>
+                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                disabled={buttonTimeout}>
+                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                </button>
+                <button className="active-div-watchlist-button"
+                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                onClick={() => handleReadMore(item.id)}
+                disabled={buttonTimeout}>Read more</button>
+              </div>
+              
+              
+              <h3>{item.overview}</h3>
           </div>
         </div>
           
@@ -543,6 +654,11 @@ if (moviesResults) {
 
 })}
 
+function handleFilterChange(value) {
+  navigate(`/browse/movies?type=${value}`)
+  window.scrollTo(0, 0)
+}
+
 
 
 
@@ -551,12 +667,13 @@ if (moviesResults) {
   //<h1 style={{color: "white", marginLeft: "350px"}}>Popular movies</h1>
   return (
     
-    <div className="discover-page-div" style={{}}>
+    <div className="discover-page-div" style={{marginTop: "20vh"}}>
 
       <div className="category-div action">
         <h1>Trending:</h1>
         <NavLink
-        to="."
+        onClick={() => window.scrollTo(0, 0)}
+        to={`/browse/movies?type=trending`}
         style={navLinksStyle}>
           See all trending movies {`->`}
         </NavLink>
@@ -568,8 +685,10 @@ if (moviesResults) {
       <div className="category-div action">
         <h1>High rating movies:</h1>
         <NavLink
-        to="."
+        onClick={() => window.scrollTo(0, 0)}
+        to={`/browse/movies?type=trending`}
         style={navLinksStyle}>
+          
           See all high rating movies {`->`}
         </NavLink>
       </div>
@@ -580,7 +699,8 @@ if (moviesResults) {
       <div className="category-div action">
         <h1>Action movies:</h1>
         <NavLink
-        to="."
+        onClick={() => window.scrollTo(0, 0)}
+        to={`/browse/movies?type=action`}
         style={navLinksStyle}>
           See all action movies {`->`}
         </NavLink>
@@ -592,7 +712,8 @@ if (moviesResults) {
       <div className="category-div action">
         <h1>Comedy movies:</h1>
         <NavLink
-        to="."
+        onClick={() => window.scrollTo(0, 0)}
+        to={`/browse/movies?type=comedy`}
         style={navLinksStyle}>
           See all comedy movies {`->`}
         </NavLink>

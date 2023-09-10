@@ -7,7 +7,7 @@ export default function LoginPage() {
     const [authLoading, setAuthLoading] = React.useState(true)
     const [redirectComponent, setRedirectComponent] = React.useState()
     const location = useLocation()
-    const { movies,  searchText, page, watchlistMovie, setWatchlistMovie, setPage, currentUser, setCurrentUser} = useOutletContext()
+    const { movies,  searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser} = useOutletContext()
 
 
     //currently have a rough version but it kinda works, so look into how to attach data to users next time
@@ -43,7 +43,7 @@ export default function LoginPage() {
     
       return (
       auth?.currentUser 
-      ? <Outlet context={{movies, searchText, page, watchlistMovie, setWatchlistMovie, setPage, currentUser, setCurrentUser}}/> 
+      ? <Outlet context={{movies, searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser}}/> 
       :  <Navigate to="/login"
       state={{message: location.state?.message, intendedPath: location.state?.intendedPath}}/>
       )
