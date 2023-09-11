@@ -4,6 +4,8 @@ import Footer from "/components/Footer"
 import Browse from "./Browse"
 import nextPageIcon from "/dist/assets/next-page.svg"
 import previousPageIcon from "/dist/assets/previous-page.svg"
+import carouselLeft from "/icons/carousel-arrow-left.png"
+import carouselRight from "/icons/carousel-arrow-right.png"
 import { AddToWatchList, RemoveFromWatchlist } from "../components/AddToWatchlist"
 import { auth } from "../firebase"
 
@@ -11,10 +13,14 @@ export default function DiscoverPage() {
 
   const [buttonTimeout, setButtonTimeout] = React.useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
+  const trendingRef = React.useRef(null)
+  const highRatingRef = React.useRef(null)
+  const actionRef = React.useRef(null)
+  const comedyRef = React.useRef(null)
   const navigate = useNavigate()
 
 
-  const [click, setClick] = React.useState({
+  const [clickTrending, setClickTrending] = React.useState({
     click: false,
     index: -1
   })
@@ -24,6 +30,25 @@ export default function DiscoverPage() {
     index: -1,
     category: ""
   })
+
+  const [clickHighRating, setClickHighRating] = React.useState({
+    click: false,
+    index: -1
+  })
+
+ 
+  const [clickAction, setClickAction] = React.useState({
+    click: false,
+    index: -1
+  })
+
+
+  const [clickComedy, setClickComedy] = React.useState({
+    click: false,
+    index: -1
+  })
+
+
 
   
 
@@ -88,8 +113,8 @@ export default function DiscoverPage() {
 }
 
 function checkMovie(movieId) {
+  console.log(actionMoviesResults)
   let tempBoolean = false
-  console.log(auth?.currentUser)
   if (auth?.currentUser) {
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
@@ -109,11 +134,19 @@ function checkMovie(movieId) {
  function handleReadMore(movieId) {
    navigate(`/browse/movies/about?movieId=${movieId}`)
   setSearchText("")
+  setWatchlistStateChangeCounter(prev => prev += 1)
+  setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
  }
 
   
-  const { movies,  searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage } = useOutletContext()
+  const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter, trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+    setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+   setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch } = useOutletContext()
   const moviesResults = movies.results
+  const trendingMoviesResults = trendingMovies.results
+  const highRatingMoviesResults = highRatingMovies.results
+  const actionMoviesResults = actionMovies.results
+  const comedyMoviesResults = comedyMovies.results
   let moviesElement = "Loading..."
   let actionMovieElement = "Loading..."
   let highRatingMovieElements = "Loading..."
@@ -133,21 +166,18 @@ function checkMovie(movieId) {
     }
   }
   
-  if (moviesResults) {
-    let movieCount = 0
-    actionMovieElement = moviesResults.map((item, index) => {
+  if (actionMoviesResults) {
+    actionMovieElement = actionMoviesResults.map((item, index) => {
       
-      if (item.genre_ids.includes(28) && movieCount < 4) {
-        movieCount++
     return (
       <div>
         <div 
         onClick={() => {
-          setClick(prev => {
+          setClickAction(prev => {
             return (
               {
                 click: !prev.click,
-                index: index
+                index: index,
               }
               )
             })
@@ -163,7 +193,7 @@ function checkMovie(movieId) {
             })
         }}
           
-          className="movie-element-div"
+          className="discover-movie-element-div"
           onMouseLeave={() => {
             setHover(prev => {
               return (
@@ -185,14 +215,14 @@ function checkMovie(movieId) {
               <h3>{item.vote_average} / 10</h3>
             </div>
         </div>
-        {click.click && click.index === index &&
+        {clickAction.click && clickAction.index === index &&
         <div className="movie-element-active-div" style={{
         backgroundImage:
         `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
         url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
           
           <button onClick={() => {
-            setClick(prev => {
+            setClickAction(prev => {
               return (
                 {
                   click: !prev.click,
@@ -233,23 +263,19 @@ function checkMovie(movieId) {
         }
       </div>
     )
-  } else {
-    return " "
-  }
+
 }
 )
 }
 
-if (moviesResults) {
+if (trendingMoviesResults) {
   let movieCount = 0
-  trendingMovieElement = moviesResults.map((item, index) => {
-    if (item.popularity > 2000 && movieCount < 4) {
-      movieCount++
+  trendingMovieElement = trendingMoviesResults.map((item, index) => {
   return (
     <div>
       <div 
       onClick={() => {
-        setClick(prev => {
+        setClickTrending(prev => {
           return (
             {
               click: !prev.click,
@@ -269,7 +295,7 @@ if (moviesResults) {
           })
       }}
         
-        className="movie-element-div"
+        className="discover-movie-element-div"
         onMouseLeave={() => {
           setHover(prev => {
             return (
@@ -291,13 +317,13 @@ if (moviesResults) {
             <h3>{item.vote_average} / 10</h3>
           </div>
       </div>
-      {click.click && click.index === index &&
+      {clickTrending.click && clickTrending.index === index &&
       <div className="movie-element-active-div" style={{
       backgroundImage:
       `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
       url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
         <button onClick={() => {
-          setClick(prev => {
+          setClickTrending(prev => {
             return (
               {
                 click: !prev.click,
@@ -338,28 +364,25 @@ if (moviesResults) {
       }
     </div>
   )
-} else {
-  return " "
-}
+
 }
 )
 }
 
-if (moviesResults) {
+if (highRatingMoviesResults) {
   let movieCount = 0
-  highRatingMovieElements = moviesResults.map((item, index) => {
+  highRatingMovieElements = highRatingMoviesResults.map((item, index) => {
     
-    if (item.vote_average > 7 && movieCount < 4) {
-      movieCount++
   return (
     <div>
       <div 
       onClick={() => {
-        setClick(prev => {
+        setClickHighRating(prev => {
           return (
             {
               click: !prev.click,
-              index: index
+              index: index,
+              category: "high rating"
             }
             )
           })
@@ -375,7 +398,7 @@ if (moviesResults) {
           })
       }}
         
-        className="movie-element-div"
+        className="discover-movie-element-div"
         onMouseLeave={() => {
           setHover(prev => {
             return (
@@ -397,13 +420,13 @@ if (moviesResults) {
             <h3>{item.vote_average} / 10</h3>
           </div>
       </div>
-      {click.click && click.index === index &&
+      {clickHighRating.click && clickHighRating.index === index &&
       <div className="movie-element-active-div" style={{
       backgroundImage:
       `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
       url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
         <button onClick={() => {
-          setClick(prev => {
+          setClickHighRating(prev => {
             return (
               {
                 click: !prev.click,
@@ -444,24 +467,18 @@ if (moviesResults) {
       }
     </div>
   )
-} else {
-  return " "
-}
+
 }
 )
 }
 
-if (moviesResults) {
-  let movieCount = 0
-  comedyMovieElement = moviesResults.map((item, index) => {
-    
-    if (item.genre_ids.includes(35) && movieCount < 4) {
-      movieCount++
+if (comedyMoviesResults) {
+  comedyMovieElement = comedyMoviesResults.map((item, index) => {
   return (
     <div>
       <div 
       onClick={() => {
-        setClick(prev => {
+        setClickComedy(prev => {
           return (
             {
               click: !prev.click,
@@ -482,7 +499,7 @@ if (moviesResults) {
           })
       }}
         
-        className="movie-element-div"
+        className="discover-movie-element-div"
         onMouseLeave={() => {
           setHover(prev => {
             return (
@@ -503,13 +520,13 @@ if (moviesResults) {
             <h3>{item.vote_average} / 10</h3>
           </div>
       </div>
-      {click.click && click.index === index &&
+      {clickComedy.click & clickComedy.index === index &&
       <div className="movie-element-active-div" style={{
       backgroundImage:
       `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
       url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
         <button onClick={() => {
-          setClick(prev => {
+          setClickComedy(prev => {
             return (
               {
                 click: !prev.click,
@@ -550,109 +567,12 @@ if (moviesResults) {
       }
     </div>
   )
-} else {
-  return " "
-}
+
 }
 )
 }
 
-if (moviesResults) {
-  moviesElement = moviesResults.map((item, index) => {
-  return (
-    <div>
-      <div 
-      onClick={() => {
-        setClick(prev => {
-          return (
-            {
-              click: !prev.click,
-              index: index
-            }
-            )
-          })
-        }}
-      onMouseOver={() => {
-        setHover(prev => {
-          return (
-            {
-              hover: true,
-              index: index
-            }
-            )
-          })
-      }}
-        
-        className="movie-element-div"
-        onMouseLeave={() => {
-          setHover(prev => {
-            return (
-              {
-                hover: false,
-                index: index,
-              }
-              )
-            })
-        }}
-          style={{backgroundImage: `${hover.hover && hover.index === index? null : style}
-          url(https://image.tmdb.org/t/p/original${item.poster_path})`}}
 
-        
-        >
-          <div>
-            <h1 >{item.title}</h1>
-            <h3>{item.vote_average} / 10</h3>
-          </div>
-      </div>
-      {click.click && click.index === index &&
-      <div className="movie-element-active-div" style={{
-      backgroundImage:
-      `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-        <button onClick={() => {
-          setClick(prev => {
-            return (
-              {
-                click: !prev.click,
-                index: -1
-              }
-              )
-            })
-        }}className="active-div-back-button"
-        > {`<-`} Go back</button>
-
-        <div className="active-div-title-div">
-          <h1>{item.title}</h1>
-          <div style={{margin: "0"}}>
-          <h3>{item.vote_average} / 10</h3>
-          <h4>({item.release_date.split("-").shift()})</h4>
-          </div>
-
-          <div className="active-div-info-div">
-          <div style={{display: "flex"}}>
-                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
-                disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
-                <button className="active-div-watchlist-button"
-                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
-                onClick={() => handleReadMore(item.id)}
-                disabled={buttonTimeout}>Read more</button>
-              </div>
-              
-              
-              <h3>{item.overview}</h3>
-          </div>
-        </div>
-          
-        
-      </div>
-      }
-    </div>
-  )
-
-})}
 
 function handleFilterChange(value) {
   navigate(`/browse/movies?type=${value}`)
@@ -664,7 +584,17 @@ function handleFilterChange(value) {
 
   
 
-  //<h1 style={{color: "white", marginLeft: "350px"}}>Popular movies</h1>
+  function handleCarousel(tag, scrollOffset) {
+    if (tag === "trending") {
+      trendingRef.current.scrollLeft += scrollOffset
+    } else if (tag === "high rating") {
+      highRatingRef.current.scrollLeft += scrollOffset
+    } else if (tag === "action") {
+      actionRef.current.scrollLeft += scrollOffset
+    } else if (tag === "comedy") {
+      comedyRef.current.scrollLeft += scrollOffset
+    } 
+  }
   return (
     
     <div className="discover-page-div" style={{marginTop: "20vh"}}>
@@ -678,8 +608,15 @@ function handleFilterChange(value) {
           See all trending movies {`->`}
         </NavLink>
       </div>
-      <div className="movie-elements-div action">
-        {moviesResults ? trendingMovieElement : "loading..."}
+      <div className="discover-page-slide-wrapper">
+        <div className="category-elements-div trending" ref={trendingRef}>
+          {trendingMoviesResults ? trendingMovieElement : "loading..."}
+        </div>
+      </div>
+
+      <div className="discover-carousel-arrow-div">
+        <img src={carouselLeft} onClick={() => handleCarousel("trending", -1650)}/>
+        <img src={carouselRight} onClick={() => handleCarousel("trending", 1650)}/>
       </div>
 
       <div className="category-div action">
@@ -692,8 +629,15 @@ function handleFilterChange(value) {
           See all high rating movies {`->`}
         </NavLink>
       </div>
-      <div className="movie-elements-div action">
-        {moviesResults ? highRatingMovieElements : "loading..."}
+      <div className="discover-page-slide-wrapper">
+        <div className="category-elements-div high-rating" ref={highRatingRef}>
+          {highRatingMoviesResults ? highRatingMovieElements : "loading..."}
+        </div>
+      </div>
+
+      <div className="discover-carousel-arrow-div" >
+        <img src={carouselLeft} onClick={() => handleCarousel("high rating", -1650)}/>
+        <img src={carouselRight} onClick={() => handleCarousel("high rating", 1650)}/>
       </div>
 
       <div className="category-div action">
@@ -705,8 +649,15 @@ function handleFilterChange(value) {
           See all action movies {`->`}
         </NavLink>
       </div>
-      <div className="movie-elements-div action">
-        {moviesResults ? actionMovieElement : "loading..."}
+      <div className="discover-page-slide-wrapper" >
+        <div className="category-elements-div action" ref={actionRef}>
+          {actionMoviesResults ? actionMovieElement : "loading..."}
+        </div>
+      </div>
+
+      <div className="discover-carousel-arrow-div">
+        <img src={carouselLeft} onClick={() => handleCarousel("action", -1650)}/>
+        <img src={carouselRight} onClick={() => handleCarousel("action", 1650)}/>
       </div>
 
       <div className="category-div action">
@@ -718,9 +669,18 @@ function handleFilterChange(value) {
           See all comedy movies {`->`}
         </NavLink>
       </div>
-      <div className="movie-elements-div action">
-        {moviesResults ? comedyMovieElement : "loading..."}
+      <div className="discover-page-slide-wrapper" >
+
+        <div className="category-elements-div comedy" ref={comedyRef}>
+            {comedyMoviesResults ? comedyMovieElement : "loading..."}
+        </div>
       </div>
+
+        <div className="discover-carousel-arrow-div" >
+            <img src={carouselLeft} onClick={() => handleCarousel("comedy", -1650)}/>
+            <img src={carouselRight} onClick={() => handleCarousel("comedy", 1650)}/>
+        </div>
+        
       <Footer />
     </div>
     

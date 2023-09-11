@@ -19,7 +19,9 @@ import { AddToWatchList } from "../components/AddToWatchlist"
 export default function HomePageLayout() {
   const [topbar, setTopbar] = React.useState(false)
 
-  const { movies, searchText, page, search, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, setSearchText, setMovies, setSearch }= useOutletContext()
+  const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+    setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+   setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }= useOutletContext()
   
 
 
@@ -76,7 +78,10 @@ export default function HomePageLayout() {
         </div>
       </div>
 
-      <Outlet context={{ movies, searchText, setSearchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setMovies, setWatchlistMovie, setPage }}/>
+      <Outlet 
+      context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+        setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+       setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }}/>
     </div>
   )
 }

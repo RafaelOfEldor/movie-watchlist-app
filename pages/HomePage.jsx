@@ -117,6 +117,8 @@ function checkMovie(movieId) {
  function handleReadMore(movieId) {
    navigate(`/browse/movies/about?movieId=${movieId}`)
   setSearchText("")
+  setWatchlistStateChangeCounter(prev => prev += 1)
+        setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
  }
 
    function handleReadMore(movieId) {

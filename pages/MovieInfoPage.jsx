@@ -206,7 +206,6 @@ function checkMovie(movieId) {
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
           if (item.movieId === movieId & item.userEmail === auth?.currentUser.email) {
-            console.log("yurr")
             tempBoolean = true
           } 
         })
@@ -331,10 +330,10 @@ function checkMovie(movieId) {
           >
             <div>
             <button style={{maxWidth: "12vw", minWidth: "12vw"}}
-            className={checkMovie(movieParam) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(movieParam) ? removeFromWatchlist(auth?.currentUser?.email, movieParam) : addToWatchList(auth?.currentUser?.email, movieParam)}
+            className={checkMovie(moviesResults.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                onClick={() => checkMovie(moviesResults.id) ? removeFromWatchlist(auth?.currentUser?.email, movieParam) : addToWatchList(auth?.currentUser?.email, movieParam)}
                 disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(movieParam) ? "Remove from watchlist" : "Add to watchlist"}
+                  {buttonTimeout ? "loading" : checkMovie(moviesResults.id) ? "Remove from watchlist" : "Add to watchlist"}
                 </button>
               
               <h1 style={{display: "flex", gap: "20px", alignItems: "center", textAlign: "center" }}>{movies.title}</h1>

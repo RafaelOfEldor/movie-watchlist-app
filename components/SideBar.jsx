@@ -22,6 +22,10 @@ export default function SideBar() {
   const [searchText, setSearchText] = React.useState("")
   const [searchParams, setSearchParams] = useSearchParams()
   const [movies, setMovies] = React.useState([])
+  const [trendingMovies, setTrendingMovies] = React.useState([])
+  const [highRatingMovies, setHighRatingMovies] = React.useState([])
+  const [actionMovies, setActionMovies] = React.useState([])
+  const [comedyMovies, setcomedyMovies] = React.useState([])
   const [watchlistMovie, setWatchlistMovie] = React.useState([])
   const [search, setSearch] = React.useState(false)
   const [page, setPage] = React.useState(1)
@@ -93,6 +97,10 @@ export default function SideBar() {
       break;
       case "adventure": setCategory(12)
       break;
+      case "trending": setCategory("trending")
+      break;
+      case "top rated": setCategory("top rated")
+      break;
     }
   }, [searchParams])
 
@@ -142,6 +150,26 @@ export default function SideBar() {
           .then(response => response.json())
           .then(data => setMovies(data))
           .catch(err => console.error(err))
+
+          fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, options) 
+          .then(response => response.json())
+          .then(data => setTrendingMovies(data))
+          .catch(err => console.error(err))
+
+          fetch(`https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1`, options) 
+          .then(response => response.json())
+          .then(data => setHighRatingMovies(data))
+          .catch(err => console.error(err))
+
+          fetch(`https://api.themoviedb.org/3/discover/movie?api_key=xxx&with_genres=28&page=1`, options) 
+          .then(response => response.json())
+          .then(data => setActionMovies(data))
+          .catch(err => console.error(err))
+
+          fetch(`https://api.themoviedb.org/3/discover/movie?api_key=xxx&with_genres=35&page=1`, options) 
+          .then(response => response.json())
+          .then(data => setcomedyMovies(data))
+          .catch(err => console.error(err))
       }
       
       
@@ -176,10 +204,23 @@ export default function SideBar() {
     };
 
     if (searchParams.get("type")){
-      fetch(`https://api.themoviedb.org/3/discover/movie?api_key=xxx&with_genres=${category}&page=${page}`, options) 
+      if (category !== "trending" & category !== "top rated") {
+        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=xxx&with_genres=${category}&page=${page}`, options) 
           .then(response => response.json())
           .then(data => setMovies(data))
           .catch(err => console.error(err))
+      } else if (category === "trending") {
+        fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`, options) 
+          .then(response => response.json())
+          .then(data => setMovies(data))
+          .catch(err => console.error(err))
+      }else if (category === "top rated") {
+        fetch(`https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}`, options) 
+          .then(response => response.json())
+          .then(data => setMovies(data))
+          .catch(err => console.error(err))
+      }
+      
   }
     
   }, [category, page])
@@ -317,7 +358,10 @@ const [currentUser, setCurrentUser] = React.useState(null)
           }
         </div>
       </div>
-      <Outlet context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
+      <Outlet 
+      context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+         setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+        setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
     </div>
     )
 }

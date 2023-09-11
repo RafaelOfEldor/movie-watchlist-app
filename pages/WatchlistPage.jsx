@@ -72,8 +72,8 @@ export default function WatchlistPage( { children }) {
     watchlistMovie.map(item => {
      if (`${item.userEmail}` === `${email}` & `${item.movieId}` === `${id}`){
        RemoveFromWatchlist(item.id)
-       setWatchlistStateChangeCounter(prev => prev += 1)
-       setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 3000)
+       
+       setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 100)
        console.log(watchlistStateChangeCounter)
      }
    }
@@ -196,14 +196,14 @@ export default function WatchlistPage( { children }) {
               <button className="active-div-watchlist-button remove"
               onClick={() => {
                 removeFromWatchlist(auth?.currentUser?.email, item.id)
-                setClick(prev => {
+                setTimeout(() => setClick(prev => {
                   return (
                     {
                       click: !prev.click,
                       index: -1
                     }
                     )
-                  })
+                  }), 100)
               } }>Remove from watchlist</button>
               <h3>{item.overview}</h3>
             </div>

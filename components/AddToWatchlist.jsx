@@ -11,7 +11,7 @@ const moviesCollectionRef = collection(db, "Watchlist-Movies")
 export const AddToWatchList = async (email, id) => {
 
   try {
-    await addDoc(moviesCollectionRef, {userEmail: email, movieId: id})
+    await addDoc(moviesCollectionRef, {userEmail: email, movieId: id })
   } catch(err) {
     console.error(err)
   }

@@ -140,6 +140,8 @@ export default function Browse( { children }) {
    function handleReadMore(movieId) {
      navigate(`/browse/movies/about?movieId=${movieId}`)
     setSearchText("")
+    setWatchlistStateChangeCounter(prev => prev += 1)
+    setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
    }
    
   if (moviesResults) {
@@ -313,6 +315,11 @@ export default function Browse( { children }) {
             style={typeFilter === "adventure" ? activeStyle : null}
             to={`?type=adventure`}
             >Adventure</NavLink>
+            <NavLink className='category-card-div'
+            onClick={() => setSearchText("")}
+            style={typeFilter === "top rated" ? activeStyle : null}
+            to={`?type=top rated`}
+            >Top rated</NavLink>
 
           </div>
           <h1 style={{marginLeft: "280px", marginTop: "50px", color: "white"}}>{searchText ? `Search results for: ${searchText}` : `Browse ${typeFilter !== null ? typeFilter : "all"} movies:`}</h1>
