@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom"
 import Sidebar from "./components/SideBar"
 import HomePageLayout from "./pages/HomePageLayout"

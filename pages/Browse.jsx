@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link, useOutletContext, useNavigate, NavLink, useSearchParams } from "react-router-dom"
-import nextPageIcon from "/dist/assets/next-page.svg"
-import previousPageIcon from "/dist/assets/previous-page.svg"
+import nextPageIcon from "/assets/next-page.svg"
+import previousPageIcon from "/assets/previous-page.svg"
 import Footer from "/components/Footer"
 import { AddToWatchList, RemoveFromWatchlist } from "../components/AddToWatchlist"
 import { auth } from "../firebase"
