@@ -46,7 +46,6 @@ export default function WatchlistPage( { children }) {
       )
     }
     renderCount.current += 1
-    console.log(renderCount.current)
     
 
     
@@ -74,7 +73,6 @@ export default function WatchlistPage( { children }) {
        RemoveFromWatchlist(item.id)
        
        setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 100)
-       console.log(watchlistStateChangeCounter)
      }
    }
  )
@@ -109,17 +107,6 @@ export default function WatchlistPage( { children }) {
   const navLinksStyle = {
     color: "green"
   }
-
-  /*
-  fetch('https://api.themoviedb.org/3/movie/157336?language=en-US', options)
-  .then(response => response.json())
-  .then(response => console.log(response))
-  .catch(err => console.error(err));
-  */
-
-
-
-  console.log(watchlistMovieElement)
 
   if (watchlistMovieElement) {
     moviesElement = watchlistMovieElement.map((item, index) => {

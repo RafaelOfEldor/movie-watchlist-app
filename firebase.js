@@ -18,13 +18,12 @@ import "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAPP-FZ9Ws8wd8g8TTMaR1h0cWnnHmkEWY",
-  authDomain: "movie-auth-development.firebaseapp.com",
-  databaseURL: "https://movie-auth-development-default-rtdb.firebaseio.com/",
-  projectId: "movie-auth-development",
-  storageBucket: "movie-auth-development.appspot.com",
-  messagingSenderId: "743603172382",
-  appId: "1:743603172382:web:0bd47ed743c965cf25aa0f"
+  apiKey: "AIzaSyBxjbckaw92KjdowodrAphj5IaZd8bja6E",
+  authDomain: "movie-auth-production-19e49.firebaseapp.com",
+  projectId: "movie-auth-production-19e49",
+  storageBucket: "movie-auth-production-19e49.appspot.com",
+  messagingSenderId: "758123319765",
+  appId: "1:758123319765:web:656c21a8794dee72b06d5c"
 };
 
 //Might have to export every function from firebase auth for this to work

@@ -6,7 +6,6 @@ import googleIcon from "../icons/google.svg"
 
 export default function LoginPage() {
   const location = useLocation()
-  console.log(location)
   //const [currentUser,  setCurrentUser, login] = useOutletContext()
   const [loading, setLoading] = React.useState(false)
   const {currentUser, setCurrentUser} = useOutletContext()

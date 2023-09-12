@@ -45,7 +45,6 @@ export default function HomePageLayout() {
 
   function handleChange(e) {
     setSearchText(e.target.value)
-    console.log(searchText)
     window.scrollTo({top: "0", transition: "ease-in-out 1s"})
   }
 

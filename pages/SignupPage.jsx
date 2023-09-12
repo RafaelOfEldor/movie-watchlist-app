@@ -32,17 +32,14 @@ export default function LoginPage() {
         setLoading(false)
       } else {
         if (e.target.email.value === "" | e.target.password.value === "" | e.target.confirmPassword.value=== "") {
-          console.log("all fields must be filled!")
           setResponseMessage("all fields must be filled!")
         } else {
-          console.log("passwords do not match!")
           setResponseMessage("passwords do not match!")
         }
       }
 
       //navigate("/watchlist")
       
-      console.log(location.state)
       
     }
 

@@ -55,7 +55,6 @@ export default function HomePage() {
   const [crew, setCrew] = React.useState([])
   const [movieCreationInfo, setMovieCreationInfo] = React.useState([])
   const movieParam = searchParams.get("movieId")
-  console.log(movieParam)
 
   
 
@@ -93,14 +92,10 @@ export default function HomePage() {
   }, [])
 
   React.useEffect(() => {
-    console.log(movieCreationInfo)
     setActors(movieCreationInfo.cast)
     setCrew(movieCreationInfo.crew)
   }, [movieCreationInfo])
   
-  console.log(moviesVideos)
-  console.log(actors)
-  console.log(crew)
 
   let movieVideoTrailers = []
   if (moviesVideos) {
@@ -136,7 +131,6 @@ export default function HomePage() {
       if (item.job === "Director" & i < 6) {
         crewOfMovie.push(item.name)
         i++
-        console.log(index)
       } else {
         return 
       }
@@ -146,9 +140,6 @@ export default function HomePage() {
   
   
   
-
-  console.log(movieVideoTrailers)
-  console.log(actorsOfMovie)
   
 
 
@@ -163,14 +154,7 @@ export default function HomePage() {
           tempBool = false
         } else if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
-            console.log(email)
-            console.log(item.userEmail)
-            console.log(item.movieId)
-            console.log(id)
-            console.log(watchlistMovie.length)
-            console.log(index + 1)
             AddToWatchList(email, id)
-            console.log(watchlistStateChangeCounter)
             
             setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
           }
@@ -190,7 +174,6 @@ export default function HomePage() {
         RemoveFromWatchlist(item.id)
         setWatchlistStateChangeCounter(prev => prev += 1)
         setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
-        console.log(watchlistStateChangeCounter)
       }
       
       
@@ -201,7 +184,6 @@ export default function HomePage() {
 
 function checkMovie(movieId) {
   let tempBoolean = false
-  console.log(auth?.currentUser)
   if (auth?.currentUser) {
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
@@ -249,15 +231,11 @@ function checkMovie(movieId) {
         case `12`: setMonth("December")
         break;
       }
-      console.log(moviesResults?.release_date.split("-")[1].toString())
     }
  
       
   }, [moviesResults])
 
-   console.log(movies)
-   console.log(movieGenre)
-   console.log(month)
 
    
 

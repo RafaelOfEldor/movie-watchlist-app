@@ -60,14 +60,7 @@ export default function HomePage() {
           tempBool = false
         } else if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
-            console.log(email)
-            console.log(item.userEmail)
-            console.log(item.movieId)
-            console.log(id)
-            console.log(watchlistMovie.length)
-            console.log(index + 1)
             AddToWatchList(email, id)
-            console.log(watchlistStateChangeCounter)
             
             setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
           }
@@ -87,7 +80,6 @@ export default function HomePage() {
         RemoveFromWatchlist(item.id)
         setWatchlistStateChangeCounter(prev => prev += 1)
         setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
-        console.log(watchlistStateChangeCounter)
       }
       
       
@@ -102,7 +94,6 @@ function checkMovie(movieId) {
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
           if (item.movieId === movieId & item.userEmail === auth?.currentUser.email) {
-            console.log("yurr")
             tempBoolean = true
           } 
         })
