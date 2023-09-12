@@ -249,7 +249,7 @@ body {
    justify-content: center;
    background-image: linear-gradient(90deg, rgba(6, 34, 75, 0.8) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
     linear-gradient(0deg, rgba(34,193,195,0.5) 0%, rgba(49,156,119, 0) 43%, rgba(22,111,191,0) 100%),
-     url(/icons\blue-wavy-background.jpg);
+     url(./icons/blue-wavy-background.jpg);
     padding-bottom: 10vh;
 }
 
@@ -367,7 +367,7 @@ body {
 .sidebar-layout {
     background-image: linear-gradient(90deg, rgba(6, 34, 75, 0.8) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
     linear-gradient(0deg, rgba(34,193,195,0.5) 0%, rgba(49,156,119, 0.5) 43%, rgba(22,111,191,1) 100%),
-     url(/icons\blue-wavy-background.jpg);
+    url(./icons/blue-wavy-background.jpg);
     display: flex;
 }
 
