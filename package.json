@@ -1,5 +1,4 @@
 {
-  "homepage": "http://RafaelOfEldor.github.io/movie-watchlist-app",
   "name": "project",
   "dependencies": {
     "@react-firebase/auth": "^0.2.10",
@@ -13,13 +12,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "*",
-    "gh-pages": "^6.0.0",
     "vite": "latest"
   },
   "scripts": {
     "start": "vite",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
