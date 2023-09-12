@@ -512,15 +512,13 @@ if (comedyMoviesResults) {
         }}
           style={{backgroundImage: `${hover.hover && hover.index === index && category === "comedy" ? null : style}
           url(https://image.tmdb.org/t/p/original${item.poster_path})`}}
-
-        
         >
           <div>
             <h1 >{item.title}</h1>
             <h3>{item.vote_average} / 10</h3>
           </div>
-      </div>
-      {clickComedy.click & clickComedy.index === index &&
+      </div>                                                                                                              
+      {clickComedy.click && clickComedy.index === index &&
       <div className="movie-element-active-div" style={{
       backgroundImage:
       `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),

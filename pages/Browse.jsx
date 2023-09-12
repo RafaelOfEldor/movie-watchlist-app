@@ -16,6 +16,7 @@ export default function Browse( { children }) {
   const [watchlistButtonState, setWatchlistButtonState] = React.useState("")
   const [tempBooleanState, setTempBooleanState] = React.useState(false)
   const [buttonTimeout, setButtonTimeout] = React.useState(false)
+  const activeDivRef = React.useRef()
   const navigate = useNavigate()
   const moviesResults = movies.results
   const typeFilter = searchParams.get("type")
@@ -116,7 +117,7 @@ export default function Browse( { children }) {
       
     }
   )
-  
+
 }
 
   function checkMovie(movieId) {
@@ -192,7 +193,7 @@ export default function Browse( { children }) {
             </div>
         </div>
         {click.click && click.index === index && 
-        <div className="movie-element-active-div" style={{
+        <div className="movie-element-active-div" ref={activeDivRef} style={{
         backgroundImage:
         `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
         url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
