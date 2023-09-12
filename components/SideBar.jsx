@@ -122,7 +122,7 @@ export default function SideBar() {
       }
     };
 
-    if (renderCount.current > 0){
+    
 
       if (searchText) {
         setCategory(null)
@@ -172,7 +172,7 @@ export default function SideBar() {
       
       
     
-    }
+    
 
     
 
@@ -357,7 +357,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
       <Outlet 
       context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
          setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
-        setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} /> 
+        setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} />
     </div>
     )
 }
