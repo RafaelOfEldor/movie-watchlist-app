@@ -74,8 +74,7 @@ export default function DiscoverPage() {
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        } 
-        if (watchlistMovie.length === index + 1 & item.id !== id) {
+        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             

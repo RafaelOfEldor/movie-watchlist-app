@@ -75,16 +75,13 @@ export default function Browse( { children }) {
 
   function addToWatchList(email, id) {
     let tempBool = true
-    
     if (auth?.currentUser) {
       setButtonTimeout(true)
-      setWatchlistStateChangeCounter(prev => prev += 1)
       setTimeout(() => setButtonTimeout(false), 700)
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        }
-        if (watchlistMovie.length === index + 1 & item.id !== id) {
+        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             
@@ -93,8 +90,6 @@ export default function Browse( { children }) {
         }
       })
     } else {
-      setSearchParams({})
-      setSearchText("")
       navigate("/login")
     }
    }

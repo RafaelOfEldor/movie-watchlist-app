@@ -147,13 +147,11 @@ export default function HomePage() {
     let tempBool = true
     if (auth?.currentUser) {
       setButtonTimeout(true)
-      setWatchlistStateChangeCounter(prev => prev += 1)
       setTimeout(() => setButtonTimeout(false), 700)
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        } 
-        if (watchlistMovie.length === index + 1 & item.id !== id) {
+        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             
@@ -184,10 +182,13 @@ export default function HomePage() {
 }
 
 function checkMovie(movieId) {
+  console.log(movieId)
   let tempBoolean = false
   if (auth?.currentUser) {
+    
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
+          console.log(item)
           if (item.movieId === movieId & item.userEmail === auth?.currentUser.email) {
             tempBoolean = true
           } 
@@ -195,9 +196,12 @@ function checkMovie(movieId) {
       }
   } else {
     tempBoolean = false
-  } 
+  }
+  console.log(tempBoolean) 
    return tempBoolean
  }
+
+
 
    React.useEffect(() => {
     if (moviesResults) {
@@ -310,10 +314,10 @@ function checkMovie(movieId) {
             <div>
             <button style={{maxWidth: "12vw", minWidth: "12vw"}}
             className={checkMovie(moviesResults.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(moviesResults.id) ? removeFromWatchlist(auth?.currentUser?.email, movieParam) : addToWatchList(auth?.currentUser?.email, movieParam)}
+                onClick={() => checkMovie(moviesResults.id) ? removeFromWatchlist(auth?.currentUser?.email, movieParam) : addToWatchList(auth?.currentUser?.email, moviesResults.id)}
                 disabled={buttonTimeout}>
                   {buttonTimeout ? "loading" : checkMovie(moviesResults.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
+            </button>
               
               <h1 style={{display: "flex", gap: "20px", alignItems: "center", textAlign: "center" }}>{movies.title}</h1>
               <h4 style={{marginBottom: "0", marginTop: "0", fontWeight: "400"}}>{(movies.runtime/60).toString().split(".", 1)} hours {(parseInt((movies.runtime/60).toString().split(".")[1].slice(0, 1))/10*60).toString().slice(0, 3).split(".", 2).slice(0).shift()} minutes</h4>
