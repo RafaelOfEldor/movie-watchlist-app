@@ -123,7 +123,7 @@ export default function SideBar() {
     };
 
     
-      if (renderCount.current > 0) {
+  
       if (searchText) {
         setCategory(null)
         setSearchParams({query: `${searchFilter}`})
@@ -173,7 +173,6 @@ export default function SideBar() {
       
     
     
-      }
     
 
     

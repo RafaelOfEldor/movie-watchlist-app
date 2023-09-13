@@ -91,6 +91,8 @@ export default function Browse( { children }) {
         }
       })
     } else {
+      setSearchParams({})
+      setSearchText("")
       navigate("/login")
     }
    }
