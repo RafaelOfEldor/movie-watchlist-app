@@ -75,19 +75,15 @@ export default function Browse( { children }) {
 
   function addToWatchList(email, id) {
     let tempBool = true
-    console.log("1")
+    
     if (auth?.currentUser) {
-      console.log("2")
       setButtonTimeout(true)
       setWatchlistStateChangeCounter(prev => prev += 1)
       setTimeout(() => setButtonTimeout(false), 700)
       watchlistMovie.map((item, index) => {
-        console.log("3")
         if (item.userEmail === email & item.movieId === id) {
-          console.log("4")
           tempBool = false
         } else if (watchlistMovie.length === index + 1 & item.id !== id) {
-          console.log("5")
           if (tempBool) {
             AddToWatchList(email, id)
             
