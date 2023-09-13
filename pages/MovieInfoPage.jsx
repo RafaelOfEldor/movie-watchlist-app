@@ -182,13 +182,11 @@ export default function HomePage() {
 }
 
 function checkMovie(movieId) {
-  console.log(movieId)
   let tempBoolean = false
   if (auth?.currentUser) {
     
       if (watchlistMovie.length > 0) {
         watchlistMovie.map(item => {
-          console.log(item)
           if (item.movieId === movieId & item.userEmail === auth?.currentUser.email) {
             tempBoolean = true
           } 
@@ -197,7 +195,6 @@ function checkMovie(movieId) {
   } else {
     tempBoolean = false
   }
-  console.log(tempBoolean) 
    return tempBoolean
  }
 
