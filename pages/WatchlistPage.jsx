@@ -161,7 +161,7 @@ function handleReadMore(movieId) {
           >
             <div>
               <h1 >{item.title}</h1>
-              <h3>{item.vote_average} / 10</h3>
+              <h3>{item.vote_average.toString().slice(".", 3)} / 10</h3>
             </div>
         </div>
         {click.click && click.index === index &&
@@ -201,7 +201,7 @@ function handleReadMore(movieId) {
             <div className="active-div-title-div">
               <h1>{item.title}</h1>
               <div style={{margin: "0"}}>
-              <h3>{item.vote_average} / 10</h3>
+              <h3>{item.vote_average.toString().slice(".", 3)} / 10</h3>
               <h4>({item.release_date.split("-").shift()})</h4>
               </div>
     
