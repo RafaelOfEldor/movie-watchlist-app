@@ -7,7 +7,7 @@ export function AuthContext()  {
   
   
   const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
-    setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+    canScroll, setCanScroll, setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
    setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch} = useOutletContext()
   
 
@@ -21,6 +21,6 @@ export function AuthContext()  {
 
   return <Outlet 
   context={{movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
-    setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+    canScroll, setCanScroll, setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
    setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch}}/>
 }

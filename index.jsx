@@ -13,6 +13,7 @@ import NotFOundPage from './pages/NotFoundPage';
 import WatchlistPage from './pages/WatchlistPage';
 import DiscoverPage from './pages/DiscoverPage';
 import MovieInfoPage from './pages/MovieInfoPage';
+import SettingsPage from './pages/SettingsPage';
 
 
 
@@ -60,7 +61,7 @@ function App() {
                 </Route>
 
                 <Route element={<AuthorizedPage />}>
-                  <Route path="settings" element={<HomePage />}/>
+                  <Route path="settings" element={<SettingsPage />}/>
                 </Route>
 
             </Route>

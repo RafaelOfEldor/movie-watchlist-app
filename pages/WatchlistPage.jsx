@@ -13,7 +13,8 @@ import { RemoveFromWatchlist } from "../components/AddToWatchlist"
 
 export default function WatchlistPage( { children }) {
   const [watchlistMovieElement, setWatchlistMovieElement] = React.useState([])
-  const { movies, searchText, page, watchlistMovie, watchlistStateChangeCounter, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
+  const { movies, searchText, page, watchlistMovie, watchlistStateChangeCounter, 
+    canScroll, setCanScroll, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
   const renderCount = React.useRef(0)
 
 
@@ -30,6 +31,7 @@ export default function WatchlistPage( { children }) {
 
   React.useEffect(() => {
     setWatchlistMovieElement([])
+    if (renderCount.current > 0)
     
       watchlistMovie.map(item => {
         if (`${item.userEmail}` === `${auth.currentUser.email}`) {
@@ -76,6 +78,14 @@ export default function WatchlistPage( { children }) {
  )
  
 }
+
+function handleReadMore(movieId) {
+  navigate(`/browse/movies/about?movieId=${movieId}`)
+  setCanScroll(true)
+ setSearchText("")
+ setWatchlistStateChangeCounter(prev => prev += 1)
+ setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
+}
   
 
   function nextPage() {
@@ -112,6 +122,7 @@ export default function WatchlistPage( { children }) {
       <div>
         <div 
         onClick={() => {
+          setCanScroll(false)
           setClick(prev => {
             return (
               {
@@ -154,11 +165,11 @@ export default function WatchlistPage( { children }) {
             </div>
         </div>
         {click.click && click.index === index &&
-        <div className="movie-element-active-div" style={{
-        backgroundImage:
-        `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-        url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-          <button onClick={() => {
+        <div>
+
+          <div className="background-of-active-div" 
+          onClick={() => {
+            setCanScroll(true)
             setClick(prev => {
               return (
                 {
@@ -167,34 +178,59 @@ export default function WatchlistPage( { children }) {
                 }
                 )
               })
-          }}className="active-div-back-button"
-          > {`<-`} Go back</button>
-  
-          <div className="active-div-title-div">
-            <h1>{item.title}</h1>
-            <div style={{margin: "0"}}>
-            <h3>{item.vote_average} / 10</h3>
-            <h4>({item.release_date.split("-").shift()})</h4>
-            </div>
-  
-            <div className="active-div-info-div">
-              <button className="active-div-watchlist-button remove"
-              onClick={() => {
-                removeFromWatchlist(auth?.currentUser?.email, item.id)
-                setTimeout(() => setClick(prev => {
-                  return (
-                    {
-                      click: !prev.click,
-                      index: -1
-                    }
-                    )
-                  }), 100)
-              } }>Remove from watchlist</button>
-              <h3>{item.overview}</h3>
-            </div>
-          </div>
-            
+            }}>
           
+          </div>
+          <div className="movie-element-active-div" style={{
+          backgroundImage:
+          `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
+          url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
+            <button onClick={() => {
+              setCanScroll(true)
+              setClick(prev => {
+                return (
+                  {
+                    click: !prev.click,
+                    index: -1
+                  }
+                  )
+                })
+            }}className="active-div-back-button"
+            > {`<-`} Go back</button>
+    
+            <div className="active-div-title-div">
+              <h1>{item.title}</h1>
+              <div style={{margin: "0"}}>
+              <h3>{item.vote_average} / 10</h3>
+              <h4>({item.release_date.split("-").shift()})</h4>
+              </div>
+    
+              <div className="active-div-info-div">
+              <div style={{display: "flex"}}>
+                <button className="active-div-watchlist-button remove"
+                onClick={() => {
+                  removeFromWatchlist(auth?.currentUser?.email, item.id)
+                  setCanScroll(true)
+                  setTimeout(() => setClick(prev => {
+                    return (
+                      {
+                        click: !prev.click,
+                        index: -1
+                      }
+                      )
+                    }), 100)
+                  } }>Remove from watchlist</button>
+                  <button className="active-div-watchlist-button"
+                  style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                  onClick={() => handleReadMore(item.id)}
+                  >Read more</button>
+                </div>
+                <h3>{item.overview}</h3>
+              </div>
+            </div>
+              
+            
+          </div>
         </div>
         }
       </div>

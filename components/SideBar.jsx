@@ -26,6 +26,7 @@ export default function SideBar() {
   const [highRatingMovies, setHighRatingMovies] = React.useState([])
   const [actionMovies, setActionMovies] = React.useState([])
   const [comedyMovies, setcomedyMovies] = React.useState([])
+  const [canScroll, setCanScroll] = React.useState(true)
   const [watchlistMovie, setWatchlistMovie] = React.useState([])
   const [search, setSearch] = React.useState(false)
   const [page, setPage] = React.useState(1)
@@ -69,6 +70,7 @@ export default function SideBar() {
     setPage(1)
 
   }, [searchParams])
+
   
 
   React.useEffect(() => {
@@ -248,6 +250,18 @@ const [currentUser, setCurrentUser] = React.useState(null)
 
     return unsubscribe
     }, [])
+
+    
+    React.useEffect(() => {
+      if (canScroll) {
+        document.body.style.overflow = "visible"
+      } else if (!canScroll) {
+        document.body.style.overflow = "hidden"
+      } else {
+        document.body.style.overflow = "visible"
+      }
+      
+    }, [canScroll])
     
 
   
@@ -273,7 +287,7 @@ const [currentUser, setCurrentUser] = React.useState(null)
           
         <div className='user-siderbar-div'>
           <img src={`${guestUser}`} />
-          <h3>{currentUser ? `${currentUser.email}` : `guest`}</h3>
+          <h5>{currentUser ? `${currentUser.email}` : `guest`}</h5>
         </div>
       
         <div>
@@ -354,7 +368,8 @@ const [currentUser, setCurrentUser] = React.useState(null)
         </div>
       </div>
       <Outlet 
-      context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+      context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies, 
+        canScroll, setCanScroll,
          setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
         setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }} />
     </div>

@@ -123,13 +123,14 @@ function checkMovie(movieId) {
 
  function handleReadMore(movieId) {
    navigate(`/browse/movies/about?movieId=${movieId}`)
+   setCanScroll(true)
   setSearchText("")
   setWatchlistStateChangeCounter(prev => prev += 1)
   setTimeout(() => setWatchlistStateChangeCounter(prev => prev += 1), 500)
  }
 
   
-  const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter, trendingMovies, highRatingMovies, actionMovies, comedyMovies,
+  const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter, canScroll, setCanScroll, trendingMovies, highRatingMovies, actionMovies, comedyMovies,
     setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
    setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch } = useOutletContext()
   const moviesResults = movies.results
@@ -163,6 +164,7 @@ function checkMovie(movieId) {
       <div>
         <div 
         onClick={() => {
+          setCanScroll(false)
           setClickAction(prev => {
             return (
               {
@@ -206,12 +208,12 @@ function checkMovie(movieId) {
             </div>
         </div>
         {clickAction.click && clickAction.index === index &&
-        <div className="movie-element-active-div" style={{
-        backgroundImage:
-        `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-        url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-          
-          <button onClick={() => {
+        <div>
+
+
+          <div className="background-of-active-div" 
+          onClick={() => {
+            setCanScroll(true)
             setClickAction(prev => {
               return (
                 {
@@ -220,35 +222,52 @@ function checkMovie(movieId) {
                 }
                 )
               })
-          }}className="active-div-back-button"
-          > {`<-`} Go back</button>
-
-          <div className="active-div-title-div">
-            <h1>{item.title}</h1>
-            <div style={{margin: "0"}}>
-            <h3>{item.vote_average} / 10</h3>
-            <h4>({item.release_date.split("-").shift()})</h4>
-            </div>
-
-            <div className="active-div-info-div">
-            <div style={{display: "flex"}}>
-                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
-                disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
-                <button className="active-div-watchlist-button"
-                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
-                onClick={() => handleReadMore(item.id)}
-                disabled={buttonTimeout}>Read more</button>
-              </div>
-              
-              
-              <h3>{item.overview}</h3>
-          </div>
-          </div>
+            }}></div>
+          <div className="movie-element-active-div" style={{
+          backgroundImage:
+          `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
+          url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
             
-          
+            <button onClick={() => {
+              setCanScroll(true)
+              setClickAction(prev => {
+                return (
+                  {
+                    click: !prev.click,
+                    index: -1
+                  }
+                  )
+                })
+            }}className="active-div-back-button"
+            > {`<-`} Go back</button>
+
+            <div className="active-div-title-div">
+              <h1>{item.title}</h1>
+              <div style={{margin: "0"}}>
+              <h3>{item.vote_average} / 10</h3>
+              <h4>({item.release_date.split("-").shift()})</h4>
+              </div>
+
+              <div className="active-div-info-div">
+              <div style={{display: "flex"}}>
+                  <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                  onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                  disabled={buttonTimeout}>
+                    {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                  </button>
+                  <button className="active-div-watchlist-button"
+                  style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                  onClick={() => handleReadMore(item.id)}
+                  disabled={buttonTimeout}>Read more</button>
+                </div>
+                
+                
+                <h3>{item.overview}</h3>
+            </div>
+            </div>
+              
+            
+          </div>
         </div>
         }
       </div>
@@ -265,6 +284,7 @@ if (trendingMoviesResults) {
     <div>
       <div 
       onClick={() => {
+        setCanScroll(false)
         setClickTrending(prev => {
           return (
             {
@@ -308,48 +328,66 @@ if (trendingMoviesResults) {
           </div>
       </div>
       {clickTrending.click && clickTrending.index === index &&
-      <div className="movie-element-active-div" style={{
-      backgroundImage:
-      `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-        <button onClick={() => {
-          setClickTrending(prev => {
-            return (
-              {
-                click: !prev.click,
-                index: -1
-              }
-              )
-            })
-        }}className="active-div-back-button"
-        > {`<-`} Go back</button>
 
-        <div className="active-div-title-div">
-          <h1>{item.title}</h1>
-          <div style={{margin: "0"}}>
-          <h3>{item.vote_average} / 10</h3>
-          <h4>({item.release_date.split("-").shift()})</h4>
-          </div>
+    <div>
 
-          <div className="active-div-info-div">
-            <div style={{display: "flex"}}>
-                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
-                disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
-                <button className="active-div-watchlist-button"
-                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
-                onClick={() => handleReadMore(item.id)}
-                disabled={buttonTimeout}>Read more</button>
+
+      <div className="background-of-active-div" 
+      onClick={() => {
+        setCanScroll(true)
+        setClickTrending(prev => {
+          return (
+            {
+              click: !prev.click,
+              index: -1
+            }
+            )
+          })
+        }}></div>
+        <div className="movie-element-active-div" style={{
+        backgroundImage:
+        `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
+        url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
+          <button onClick={() => {
+            setCanScroll(true)
+            setClickTrending(prev => {
+              return (
+                {
+                  click: !prev.click,
+                  index: -1
+                }
+                )
+              })
+          }}className="active-div-back-button"
+          > {`<-`} Go back</button>
+
+          <div className="active-div-title-div">
+            <h1>{item.title}</h1>
+            <div style={{margin: "0"}}>
+            <h3>{item.vote_average} / 10</h3>
+            <h4>({item.release_date.split("-").shift()})</h4>
             </div>
-              
-              
-            <h3>{item.overview}</h3>
+
+            <div className="active-div-info-div">
+              <div style={{display: "flex"}}>
+                  <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                  onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                  disabled={buttonTimeout}>
+                    {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                  </button>
+                  <button className="active-div-watchlist-button"
+                  style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                  onClick={() => handleReadMore(item.id)}
+                  disabled={buttonTimeout}>Read more</button>
+              </div>
+                
+                
+              <h3>{item.overview}</h3>
+            </div>
           </div>
-        </div>
+            
           
-        
+        </div>
       </div>
       }
     </div>
@@ -367,6 +405,7 @@ if (highRatingMoviesResults) {
     <div>
       <div 
       onClick={() => {
+        setCanScroll(false)
         setClickHighRating(prev => {
           return (
             {
@@ -411,48 +450,66 @@ if (highRatingMoviesResults) {
           </div>
       </div>
       {clickHighRating.click && clickHighRating.index === index &&
-      <div className="movie-element-active-div" style={{
-      backgroundImage:
-      `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-        <button onClick={() => {
-          setClickHighRating(prev => {
-            return (
-              {
-                click: !prev.click,
-                index: -1
-              }
-              )
-            })
-        }}className="active-div-back-button"
-        > {`<-`} Go back</button>
 
-        <div className="active-div-title-div">
-          <h1>{item.title}</h1>
-          <div style={{margin: "0"}}>
-          <h3>{item.vote_average} / 10</h3>
-          <h4>({item.release_date.split("-").shift()})</h4>
-          </div>
+    <div>
 
-          <div className="active-div-info-div">
-          <div style={{display: "flex"}}>
-                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
-                disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
-                <button className="active-div-watchlist-button"
-                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
-                onClick={() => handleReadMore(item.id)}
-                disabled={buttonTimeout}>Read more</button>
-              </div>
-              
-              
-              <h3>{item.overview}</h3>
+
+      <div className="background-of-active-div" 
+      onClick={() => {
+        setCanScroll(true)
+        setClickHighRating(prev => {
+          return (
+            {
+              click: !prev.click,
+              index: -1
+            }
+            )
+          })
+        }}></div>
+        <div className="movie-element-active-div" style={{
+        backgroundImage:
+        `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
+        url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
+          <button onClick={() => {
+            setCanScroll(true)
+            setClickHighRating(prev => {
+              return (
+                {
+                  click: !prev.click,
+                  index: -1
+                }
+                )
+              })
+          }}className="active-div-back-button"
+          > {`<-`} Go back</button>
+
+          <div className="active-div-title-div">
+            <h1>{item.title}</h1>
+            <div style={{margin: "0"}}>
+            <h3>{item.vote_average} / 10</h3>
+            <h4>({item.release_date.split("-").shift()})</h4>
+            </div>
+
+            <div className="active-div-info-div">
+            <div style={{display: "flex"}}>
+                  <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                  onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                  disabled={buttonTimeout}>
+                    {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                  </button>
+                  <button className="active-div-watchlist-button"
+                  style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                  onClick={() => handleReadMore(item.id)}
+                  disabled={buttonTimeout}>Read more</button>
+                </div>
+                
+                
+                <h3>{item.overview}</h3>
+            </div>
           </div>
-        </div>
+            
           
-        
+        </div>
       </div>
       }
     </div>
@@ -468,6 +525,7 @@ if (comedyMoviesResults) {
     <div>
       <div 
       onClick={() => {
+        setCanScroll(false)
         setClickComedy(prev => {
           return (
             {
@@ -509,11 +567,12 @@ if (comedyMoviesResults) {
           </div>
       </div>                                                                                                              
       {clickComedy.click && clickComedy.index === index &&
-      <div className="movie-element-active-div" style={{
-      backgroundImage:
-      `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
-      url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
-        <button onClick={() => {
+      <div>
+
+
+        <div className="background-of-active-div" 
+        onClick={() => {
+          setCanScroll(true)
           setClickComedy(prev => {
             return (
               {
@@ -522,35 +581,51 @@ if (comedyMoviesResults) {
               }
               )
             })
-        }}className="active-div-back-button"
-        > {`<-`} Go back</button>
+          }}></div>
+        <div className="movie-element-active-div" style={{
+        backgroundImage:
+        `linear-gradient(to bottom, rgba(2,0,36,0) 0%, rgba(0,0,0,0.9500175070028011) 61%, rgba(0,0,0,0.7847514005602241) 100%),
+        url(https://image.tmdb.org/t/p/original${item.backdrop_path})`}}>
+          <button onClick={() => {
+            setCanScroll(true)
+            setClickComedy(prev => {
+              return (
+                {
+                  click: !prev.click,
+                  index: -1
+                }
+                )
+              })
+          }}className="active-div-back-button"
+          > {`<-`} Go back</button>
 
-        <div className="active-div-title-div">
-          <h1>{item.title}</h1>
-          <div style={{margin: "0"}}>
-          <h3>{item.vote_average} / 10</h3>
-          <h4>({item.release_date.split("-").shift()})</h4>
-          </div>
+          <div className="active-div-title-div">
+            <h1>{item.title}</h1>
+            <div style={{margin: "0"}}>
+            <h3>{item.vote_average} / 10</h3>
+            <h4>({item.release_date.split("-").shift()})</h4>
+            </div>
 
-          <div className="active-div-info-div">
-          <div style={{display: "flex"}}>
-                <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
-                disabled={buttonTimeout}>
-                  {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
-                </button>
-                <button className="active-div-watchlist-button"
-                style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
-                onClick={() => handleReadMore(item.id)}
-                disabled={buttonTimeout}>Read more</button>
-              </div>
-              
-              
-              <h3>{item.overview}</h3>
+            <div className="active-div-info-div">
+            <div style={{display: "flex"}}>
+                  <button className={checkMovie(item.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
+                  onClick={() => checkMovie(item.id) ? removeFromWatchlist(auth?.currentUser?.email, item.id) : addToWatchList(auth?.currentUser?.email, item.id)}
+                  disabled={buttonTimeout}>
+                    {buttonTimeout ? "loading" : checkMovie(item.id) ? "Remove from watchlist" : "Add to watchlist"}
+                  </button>
+                  <button className="active-div-watchlist-button"
+                  style={{width: "10vw", marginLeft: "20px", color: "black", backgroundColor: "#8797a6"}}
+                  onClick={() => handleReadMore(item.id)}
+                  disabled={buttonTimeout}>Read more</button>
+                </div>
+                
+                
+                <h3>{item.overview}</h3>
+            </div>
           </div>
-        </div>
+            
           
-        
+        </div>
       </div>
       }
     </div>

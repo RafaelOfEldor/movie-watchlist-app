@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link, Outlet, useOutletContext, NavLink } from "react-router-dom"
 import circle from "/icons/circle.svg"
 import filters from "/icons/filters.svg"
 import messages from "/icons/messages.svg"
@@ -20,7 +20,7 @@ export default function HomePageLayout() {
   const [topbar, setTopbar] = React.useState(false)
 
   const { movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
-    setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+    canScroll, setCanScroll, setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
    setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }= useOutletContext()
   
 
@@ -55,7 +55,10 @@ export default function HomePageLayout() {
       <div className={`homepage-top-layout ${topbar ? "active" : ""}`} style={{transition: "ease-in-out 1s"}} 
       >
         <div className='homepage-top-layout-logo-div'>
-          <img src={logo} alt="" className="homepage-top-layout-logo"/>
+          <NavLink to="/"
+          onClick={() => window.scrollTo({top: 0, left: 0, behavior: "smooth"})}>
+            <img src={logo} alt="" className="homepage-top-layout-logo"/>
+          </NavLink>
         </div>
         
         <input name="search-bar" type="text" placeholder='Search movies, series, and ...' onChange={(e) => handleChange(e)} value={searchText} />
@@ -79,7 +82,7 @@ export default function HomePageLayout() {
 
       <Outlet 
       context={{ movies, searchText, page, search, watchlistMovie, typeFilter, watchlistStateChangeCounter,trendingMovies, highRatingMovies, actionMovies, comedyMovies,
-        setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
+        canScroll, setCanScroll, setTrendingMovies, setHighRatingMovies, setActionMovies, setcomedyMovies,
        setWatchlistStateChangeCounter, setWatchlistMovie, setSearchText, setPage,  setMovies, setSearch }}/>
     </div>
   )
