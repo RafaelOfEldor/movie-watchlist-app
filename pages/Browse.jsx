@@ -83,7 +83,8 @@ export default function Browse( { children }) {
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
+        }
+        if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             
@@ -97,6 +98,8 @@ export default function Browse( { children }) {
       navigate("/login")
     }
    }
+
+   //git commit -m "fixed a small error that made some movies display wrong runtime, updated README file and" 
 
     function removeFromWatchlist(email, id) {
     

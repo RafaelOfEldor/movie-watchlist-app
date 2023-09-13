@@ -58,7 +58,8 @@ export default function HomePage() {
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
+        } 
+        if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             

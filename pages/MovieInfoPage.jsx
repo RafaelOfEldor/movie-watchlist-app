@@ -152,7 +152,8 @@ export default function HomePage() {
       watchlistMovie.map((item, index) => {
         if (item.userEmail === email & item.movieId === id) {
           tempBool = false
-        } else if (watchlistMovie.length === index + 1 & item.id !== id) {
+        } 
+        if (watchlistMovie.length === index + 1 & item.id !== id) {
           if (tempBool) {
             AddToWatchList(email, id)
             
@@ -315,7 +316,7 @@ function checkMovie(movieId) {
                 </button>
               
               <h1 style={{display: "flex", gap: "20px", alignItems: "center", textAlign: "center" }}>{movies.title}</h1>
-              <h4 style={{marginBottom: "0", marginTop: "0", fontWeight: "400"}}>{(movies.runtime/60).toString().split(".", 1)} hours {(parseInt((movies.runtime/60).toString().split(".")[1].slice(0, 2))/100*60).toString().slice(0, 2).split(".", 1)} minutes</h4>
+              <h4 style={{marginBottom: "0", marginTop: "0", fontWeight: "400"}}>{(movies.runtime/60).toString().split(".", 1)} hours {(parseInt((movies.runtime/60).toString().split(".")[1].slice(0, 1))/10*60).toString().slice(0, 3).split(".", 2).slice(0).shift()} minutes</h4>
               
               <div style={{display: "flex", gap: "10px", alignItems: "center",  marginBottom: "0px", marginTop: "0"}}>
                 <h4>Genres:</h4>
