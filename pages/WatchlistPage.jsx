@@ -31,8 +31,6 @@ export default function WatchlistPage( { children }) {
 
   React.useEffect(() => {
     setWatchlistMovieElement([])
-    if (renderCount.current > 0)
-    
       watchlistMovie.map(item => {
         if (`${item.userEmail}` === `${auth.currentUser.email}`) {
         fetch(`https://api.themoviedb.org/3/movie/${item.movieId}?language=en-US`, options)
@@ -45,7 +43,6 @@ export default function WatchlistPage( { children }) {
         }
         }
       )
-    renderCount.current += 1
     
 
     
