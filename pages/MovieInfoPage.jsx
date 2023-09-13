@@ -311,7 +311,7 @@ function checkMovie(movieId) {
             <div>
             <button style={{maxWidth: "12vw", minWidth: "12vw"}}
             className={checkMovie(moviesResults.id) ? "active-div-watchlist-button remove" : "active-div-watchlist-button"}
-                onClick={() => checkMovie(moviesResults.id) ? removeFromWatchlist(auth?.currentUser?.email, movieParam) : addToWatchList(auth?.currentUser?.email, moviesResults.id)}
+                onClick={() => checkMovie(moviesResults.id) ? removeFromWatchlist(auth?.currentUser?.email, moviesResults.id) : addToWatchList(auth?.currentUser?.email, moviesResults.id)}
                 disabled={buttonTimeout}>
                   {buttonTimeout ? "loading" : checkMovie(moviesResults.id) ? "Remove from watchlist" : "Add to watchlist"}
             </button>
