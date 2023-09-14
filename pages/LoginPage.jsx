@@ -61,7 +61,7 @@ export default function LoginPage() {
           
           <input placeholder="Password" type="password" name="password"/>
           
-          <button disabled={loading}>{loading ? `signing up...` : `Sign up`}</button>
+          <button disabled={loading}>{loading ? `Signing in...` : `Sign in`}</button>
         </form>
 
         <div style={{display: "flex", alignItems: "center", flexDirection: "column", color: "white", marginBottom: "20px"}}>

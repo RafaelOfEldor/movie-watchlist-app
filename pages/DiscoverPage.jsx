@@ -689,7 +689,7 @@ function handleFilterChange(value) {
         <h1>High rating movies:</h1>
         <NavLink
         onClick={() => window.scrollTo(0, 0)}
-        to={`/browse/movies?type=trending`}
+        to={`/browse/movies?type=top rated`}
         style={navLinksStyle}>
           
           See all high rating movies {`->`}
