@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Link, useOutletContext } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link, useOutletContext, useNavigate } from "react-router-dom"
 import nextPageIcon from "/assets/next-page.svg"
 import previousPageIcon from "/assets/previous-page.svg"
 import Footer from "/components/Footer"
@@ -14,8 +14,9 @@ import { RemoveFromWatchlist } from "../components/AddToWatchlist"
 export default function WatchlistPage( { children }) {
   const [watchlistMovieElement, setWatchlistMovieElement] = React.useState([])
   const { movies, searchText, page, watchlistMovie, watchlistStateChangeCounter, 
-    canScroll, setCanScroll, setWatchlistStateChangeCounter, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
+    canScroll, setCanScroll, setWatchlistStateChangeCounter, setSearchText, setWatchlistMovie, setPage, currentUser, setCurrentUser  } = useOutletContext()
   const renderCount = React.useRef(0)
+  const navigate = useNavigate()
 
 
   const options = {
