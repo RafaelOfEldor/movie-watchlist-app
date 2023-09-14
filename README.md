@@ -1,8 +1,12 @@
 
 Website showcasing all the code:
 
-
 https://watcherofmovies.netlify.app/
+
+
+Database used for API calls:
+
+https://www.themoviedb.org/
 
 
 Also: If you're making changes keep in mind that for some dumb reason the localhost website that runs the code from editor and the project in github render differently.
