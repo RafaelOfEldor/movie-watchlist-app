@@ -72,7 +72,7 @@ export default function LoginPage() {
 
         <h3 style={{color: "white", margin: "0"}}>Dont have an account? 
           <NavLink to="/signup" style={{textDecoration: "underline"}}
-          state={{intendedPath: location.state?.intendedPath}}> Signup </NavLink>
+          state={{intendedPath: location.state?.intendedPath}}> Sign up </NavLink>
           here
         </h3>
         
