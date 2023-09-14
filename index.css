@@ -389,10 +389,10 @@ body {
     display: flex;
     position: relative;
     background-color: rgba(22, 3, 53, 0.63);
+    margin-bottom: 10vh;
 }
 
 .discover-carousel-arrow-div {
-    
     display: flex;
     width: 83vw;
     color: white;
@@ -404,13 +404,69 @@ body {
 
 }
 
+.discover-carousel-arrow-left {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    background-color: rgba(75, 15, 170, 0.1);
+    color: white;
+    height: 540px;
+    margin-left: 249px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px;
+    transition: ease-in-out 0.2s;
+    cursor: pointer;
+}
+
+.discover-carousel-arrow-left > img {
+   margin-top: 20vh;
+    filter: invert(60%) sepia(109%) saturate(5586%) hue-rotate(157deg) brightness(100%) contrast(108%);
+    height: 140px;
+    
+}
+
+.discover-carousel-arrow-right {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    background-color: rgba(75, 15, 170, 0.1);
+    color: white;
+    height: 540px;
+    margin-left: 93vw;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px;
+    transition: ease-in-out 0.2s;
+    cursor: pointer;
+    
+}
+
+.discover-carousel-arrow-right:hover {
+    background-color: rgba(75, 15, 170, 0.5);
+    
+}
+
+.discover-carousel-arrow-right > img {
+    margin-top: 20vh;
+    filter: invert(60%) sepia(109%) saturate(5586%) hue-rotate(157deg) brightness(100%) contrast(108%);
+    height: 140px;
+    
+}
+
+.discover-carousel-arrow-left:hover {
+    background-color: rgba(75, 15, 170, 0.5);
+
+}
+
+
+
 .discover-carousel-arrow-div > img {
     border-radius: 10px;
     filter: invert(60%) sepia(19%) saturate(5586%) hue-rotate(157deg) brightness(100%) contrast(108%);
     background-color: rgba(22, 3, 53, 0.43);
     position: relative;
     height: 120px;
-    max-width: 200px;
     margin-top: 20px;
     padding: 20px 20px;
     transition: ease-in-out 0.2s;

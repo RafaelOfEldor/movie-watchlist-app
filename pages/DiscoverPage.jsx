@@ -83,6 +83,7 @@ export default function DiscoverPage() {
         }
       })
     } else {
+      setCanScroll(true)
       navigate("/login")
     }
    }
@@ -675,11 +676,13 @@ function handleFilterChange(value) {
         <div className="category-elements-div trending" ref={trendingRef}>
           {trendingMoviesResults ? trendingMovieElement : "loading..."}
         </div>
-      </div>
 
-      <div className="discover-carousel-arrow-div">
-        <img src={carouselLeft} onClick={() => handleCarousel("trending", -1650)}/>
-        <img src={carouselRight} onClick={() => handleCarousel("trending", 1650)}/>
+        <div className="discover-carousel-arrow-left" onClick={() => handleCarousel("trending", -1650)}>
+          <img src={carouselLeft} />
+        </div>
+        <div className="discover-carousel-arrow-right" onClick={() => handleCarousel("trending", 1650)} >
+          <img src={carouselRight} />
+        </div>
       </div>
 
       <div className="category-div action">
@@ -696,11 +699,13 @@ function handleFilterChange(value) {
         <div className="category-elements-div high-rating" ref={highRatingRef}>
           {highRatingMoviesResults ? highRatingMovieElements : "loading..."}
         </div>
-      </div>
 
-      <div className="discover-carousel-arrow-div" >
-        <img src={carouselLeft} onClick={() => handleCarousel("high rating", -1650)}/>
-        <img src={carouselRight} onClick={() => handleCarousel("high rating", 1650)}/>
+        <div className="discover-carousel-arrow-left" onClick={() => handleCarousel("high rating", -1650)}>
+          <img src={carouselLeft} />
+        </div>
+        <div className="discover-carousel-arrow-right" onClick={() => handleCarousel("high rating", 1650)} >
+          <img src={carouselRight} />
+        </div>
       </div>
 
       <div className="category-div action">
@@ -716,12 +721,15 @@ function handleFilterChange(value) {
         <div className="category-elements-div action" ref={actionRef}>
           {actionMoviesResults ? actionMovieElement : "loading..."}
         </div>
+
+        <div className="discover-carousel-arrow-left" onClick={() => handleCarousel("action", -1650)}>
+          <img src={carouselLeft} />
+        </div>
+        <div className="discover-carousel-arrow-right" onClick={() => handleCarousel("action", 1650)} >
+          <img src={carouselRight} />
+        </div>
       </div>
 
-      <div className="discover-carousel-arrow-div">
-        <img src={carouselLeft} onClick={() => handleCarousel("action", -1650)}/>
-        <img src={carouselRight} onClick={() => handleCarousel("action", 1650)}/>
-      </div>
 
       <div className="category-div action">
         <h1>Comedy movies:</h1>
@@ -737,12 +745,15 @@ function handleFilterChange(value) {
         <div className="category-elements-div comedy" ref={comedyRef}>
             {comedyMoviesResults ? comedyMovieElement : "loading..."}
         </div>
+        <div className="discover-carousel-arrow-left" onClick={() => handleCarousel("comedy", -1650)}>
+          <img src={carouselLeft} />
+        </div>
+        <div className="discover-carousel-arrow-right" onClick={() => handleCarousel("comedy", 1650)} >
+          <img src={carouselRight} />
+        </div>
       </div>
 
-        <div className="discover-carousel-arrow-div" >
-            <img src={carouselLeft} onClick={() => handleCarousel("comedy", -1650)}/>
-            <img src={carouselRight} onClick={() => handleCarousel("comedy", 1650)}/>
-        </div>
+            
         
       <Footer />
     </div>

@@ -90,6 +90,7 @@ export default function Browse( { children }) {
         }
       })
     } else {
+      setCanScroll(true)
       navigate("/login")
     }
    }

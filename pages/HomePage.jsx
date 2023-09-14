@@ -67,6 +67,7 @@ export default function HomePage() {
         }
       })
     } else {
+      setCanScroll(true)
       navigate("/login")
     }
    }
