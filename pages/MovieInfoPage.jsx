@@ -8,7 +8,7 @@ import { AddToWatchList, RemoveFromWatchlist } from "../components/AddToWatchlis
 import { auth } from "../firebase"
 import YouTube from 'react-youtube';
 import ReactPlayer from 'react-player/youtube';
-import playIcon from "/icons/playIcon.png"
+import playIcon from "../icons/playIcon.png"
 
 
 export default function HomePage() {
@@ -337,13 +337,13 @@ function checkMovie(movieId) {
 
             
             <div style={{display: "flex", gap: "10px", marginBottom: "0", marginTop: "2"}} className="movie-info-page-videos">
-            {movieVideoTrailers[0] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[0] && <img src="../icons/playIcon.png" style={{maxHeight: "100px"}}/>}
+            {movieVideoTrailers[0] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[0] && <img src={playIcon} style={{maxHeight: "100px"}}/>}
             controls className="movie-info-page-embedded-youtube" url={`https://www.youtube.com/watch?v=${moviesVideos && movieVideoTrailers[0]}`} />}
             
-            {movieVideoTrailers[1] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[1] && <img src="../icons/playIcon.png" style={{maxHeight: "100px"}}/>}
+            {movieVideoTrailers[1] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[1] && <img src={playIcon} style={{maxHeight: "100px"}}/>}
             controls className="movie-info-page-embedded-youtube" url={`https://www.youtube.com/watch?v=${moviesVideos && movieVideoTrailers[1]}`} />}
             
-            {movieVideoTrailers[2] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[2] && <img src="../icons/playIcon.png" style={{maxHeight: "100px"}}/>}
+            {movieVideoTrailers[2] && <ReactPlayer height="270" width="480" light playIcon={movieVideoTrailers[2] && <img src={playIcon} style={{maxHeight: "100px"}}/>}
             controls className="movie-info-page-embedded-youtube" url={`https://www.youtube.com/watch?v=${moviesVideos && movieVideoTrailers[2]}`} />}
           </div>
 
