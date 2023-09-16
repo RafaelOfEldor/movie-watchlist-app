@@ -20,22 +20,26 @@ export default function LoginPage() {
   
     async function handleSubmit(e) {
       e.preventDefault()
-      if (e.target.password.value === e.target.confirmPassword.value & e.target.password.value !== "") {
+      if (e.target.password.value === e.target.confirmPassword.value & e.target.password.value !== "" & e.target.email !== "") {
 
-        try {
-          setLoading(true)
-          await signup(auth, e.target.email.value, e.target.password.value)
-          navigate(location.state.intendedPath ? `${"/" + location.state.intendedPath}` : "/", {replace: true})
-        } catch (error) {
-          console.log(error)
-        }
-        setLoading(false)
-      } else {
-        if (e.target.email.value === "" | e.target.password.value === "" | e.target.confirmPassword.value=== "") {
-          setResponseMessage("all fields must be filled!")
-        } else {
-          setResponseMessage("passwords do not match!")
-        }
+        
+          if (e.target.password.value.length <= 6){
+            setResponseMessage("Password must be at least 6 characters long.")
+          } else {
+            try {
+              setLoading(true)
+              await signup(auth, e.target.email.value, e.target.password.value)
+              navigate(location.state.intendedPath ? `${"/" + location.state.intendedPath}` : "/", {replace: true})
+            } catch (error) {
+              setResponseMessage("You must enter a valid email.")
+              console.log(error)
+            }
+          }
+          setLoading(false)
+      } else if (e.target.email.value === "" | e.target.password.value === "" | e.target.confirmPassword.value=== "") {
+        setResponseMessage("all fields must be filled!")
+      } else if (e.target.email.value !== e.target.password.value) {
+        setResponseMessage("Passwords do not match.")
       }
 
       //navigate("/watchlist")
