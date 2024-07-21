@@ -1,10 +1,10 @@
 
-Website showcasing all the code:
+## Website showcasing all the code:
 
 https://watcherofmovies.netlify.app/
 
 
-Database used for API calls:
+## Database used for API calls:
 
 https://www.themoviedb.org/
 
